@@ -2,6 +2,7 @@
 #![plugin(rocket_codegen)]
 
 extern crate rocket;
+extern crate budget_app;
 
 #[get("/")]
 fn index() -> &'static str {
