@@ -24,7 +24,7 @@ CREATE TABLE payees (
 CREATE TABLE transactions (
 	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 	date DATE NOT NULL,
-	account UUID REFERENCES accounts,
+	account UUID NOT NULL REFERENCES accounts,
 	category UUID REFERENCES categories,
 	payee UUID REFERENCES payees,
 	parent_transaction UUID REFERENCES transactions,
