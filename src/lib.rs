@@ -27,7 +27,7 @@ pub fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn create_category<'a>(conn: &PgConnection, name: &'a str, allocated: Option<BigDecimal>, parent_category: Option<Category>) -> Category {
+pub fn create_category<'a>(conn: &PgConnection, name: &'a str, allocated: Option<BigDecimal>, parent_category: Option<Category>, due_amount: Option<BigDecimal>, due_date: Option<NaiveDate>) -> Category {
     use schema::categories;
 
     let new_category = NewCategory {
@@ -37,6 +37,8 @@ pub fn create_category<'a>(conn: &PgConnection, name: &'a str, allocated: Option
             Some(cat) => Some(cat.id),
             _ => None,
         },
+        due_amount: due_amount,
+        due_date: due_date,
     };
 
     diesel::insert(&new_category).into(categories::table)

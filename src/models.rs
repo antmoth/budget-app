@@ -10,6 +10,8 @@ pub struct Category {
     pub name: String,
     pub allocated: Option<BigDecimal>,
     pub parent_category: Option<Uuid>,
+    pub due_amount: Option<BigDecimal>,
+    pub due_date: Option<NaiveDate>,
 }
 
 #[derive(Insertable)]
@@ -18,6 +20,8 @@ pub struct NewCategory<'a> {
     pub name: &'a str,
     pub allocated: Option<BigDecimal>,
     pub parent_category: Option<Uuid>,
+    pub due_amount: Option<BigDecimal>,
+    pub due_date: Option<NaiveDate>,
 }
 
 #[derive(Queryable)]

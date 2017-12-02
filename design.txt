@@ -1,0 +1,22 @@
+'fluid' categories with unpredictable expenses, like groceries
+'recurring' categories with repeating or manual due dates, like rent
+'one-time' categories with a goal, which may or may not have a due date
+Have some notion of "on track" for recurring categories
+How much time is there until the due date?
+What is the most reasonable chunk of time to subdivide? (e.g., car insurance is every 6 months -- allocate monthly until it's a month away. Rent is monthly -- allocate weekly)
+For recurring categories: am I on track? (that is, is the amount of money allocated as a fraction of the total due equal to or greater than the amount of time passed as a fraction of the time to pay?)
+
+fluid category:
+NAME		ALLOCATED	SPENT THIS MONTH	REMAINING
+Groceries	$150		$100			$50
+
+recurring category:
+NAME		ALLOCATED	DUE AMOUNT/DATE		NEEDED/TIME
+Rent		$200		$400 Dec 1		$200 ($400/wk) [red]
+Car Insurance	$100		$700 Jun 1		$600 ($100/mo) [blue]
+Car Reg		$60		$89 Nov 15 2018		$19 ($1.60/mo) [green]
+
+one-time category:
+NAME		ALLOCATED	DUE AMOUNT/DATE		NEEDED/TIME
+New bike	$50		$600			$550
+Taxes		$2000		$2200 Apr 15		$200 ($50/mo) [green]
