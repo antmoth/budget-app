@@ -1,6 +1,7 @@
 'fluid' categories with unpredictable expenses, like groceries
 'recurring' categories with repeating or manual due dates, like rent
 'one-time' categories with a goal, which may or may not have a due date
+Show amount spent in (fluid?) categories this month... instead of month, last 4 weeks? 31 days?
 Have some notion of "on track" for recurring categories
 How much time is there until the due date?
 What is the most reasonable chunk of time to subdivide? (e.g., car insurance is every 6 months -- allocate monthly until it's a month away. Rent is monthly -- allocate weekly)

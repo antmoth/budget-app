@@ -9,7 +9,8 @@ chrono = "*"
 diesel = { version = "0.16.0", features = ["postgres", "uuid", "numeric", "chrono"] }
 diesel_codegen = { version = "0.16.0", features = ["postgres"] }
 diesel_infer_schema = "0.16.0"
-dotenv = "0.9.0"
+dotenv = "0.10.1"
 rocket = "0.3.3"
 rocket_codegen = "0.3.3"
+rocket_contrib = { version = "0.3.3", default-features = false, features = ["tera_templates"] }
 uuid = { version = "*", features = ["v4"] }

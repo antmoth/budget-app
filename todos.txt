@@ -1,0 +1,16 @@
+ENDPOINTS
+- GET /categories (get all categories)
+- POST /categories (create a new category)
+- GET /categories/<id> (get one category)
+- PUT /categories/<id> (update one category)
+- DELETE /categories/<id> (delete one category)
+- all of the above for accounts
+- all of the above for payees
+- all of the above for transactions
+
+TEMPLATES
+- budget view: shows categories in tree form with name, allocated, spent_this_month?, due_amount and amount needed if applicable, due_date and amount needed per time if applicable. allows transaction entry.
+- category view: shows name, allocated, spent this month, due amount, amount needed, due date, amount needed per time. allows editing all these. shows all transactions in this category.
+- account view: shows name, cleared balance, uncleared balance, on-budget. allows editing all these. shows all transactions in this account. function to reconcile account balance.
+- payee view: shows name, default category. allows editing all these. shows all transactions for this payee.
+- transaction view: shows date, account, category, payee, amount, memo, cleared. allows editing all these. if split, shows sub-transactions under parent transaction.
