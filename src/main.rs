@@ -15,10 +15,17 @@ fn index() -> Template {
     Template::render("index", context)
 }
 
+#[get("/budget")]
+fn budget() -> Template {
+    let mut context = HashMap::new();
+    context.insert("dummy", "dummy");
+    Template::render("budget", context)
+}
+
 fn main() {
     let conn = budget_app::establish_connection();
     rocket::ignite()
-        .mount("/", routes![index])
+        .mount("/", routes![index, budget])
         .attach(Template::fairing())
         .launch();
 }
