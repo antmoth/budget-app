@@ -20,3 +20,9 @@ pub struct NewAccount<'a> {
     pub on_budget: bool,
 }
 
+#[derive(FromForm)]
+pub struct FormAccount {
+    pub name: String,
+    pub balance: usize,
+    pub on_budget: bool,
+}

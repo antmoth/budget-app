@@ -2,10 +2,10 @@ use rocket::Rocket;
 use rocket_contrib::Template;
 use std::collections::HashMap;
 
-pub mod account;
-pub mod category;
-pub mod payee;
-pub mod transaction;
+mod account;
+mod category;
+mod payee;
+mod transaction;
 
 #[get("/")]
 fn index() -> Template {
@@ -21,15 +21,10 @@ fn budget() -> Template {
     Template::render("budget", context)
 }
 
-#[get("/accounts")]
-fn accounts() -> Template {
-    let context = HashMap::<String, String>::new();
-    Template::render("accounts", context)
-}
-
 pub fn mount(r: Rocket) -> Rocket {
     r
         .mount("/", [
-               routes![index, budget, accounts]
+               routes![index, budget,
+                   account::accounts, account::new_account]
         ].concat())
 }

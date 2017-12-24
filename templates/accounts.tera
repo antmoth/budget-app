@@ -1,0 +1,27 @@
+{% extends "base" %}
+{% block title %}Accounts{% endblock title %}
+{% block content %}
+<div class="mt-3 mb-3 container">
+  <a href="/new_account" class="btn btn-primary">New Account</a>
+</div>
+<div class="mt-3 container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Cleared Balance</th>
+        <th scope="col">Uncleared Balance</th>
+        <th scope="col">On Budget</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

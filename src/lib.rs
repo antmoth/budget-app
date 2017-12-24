@@ -1,5 +1,6 @@
 #![recursion_limit="128"]
 #![feature(plugin)]
+#![feature(custom_derive)]
 #![plugin(rocket_codegen)]
 
 #[macro_use] extern crate diesel;
@@ -12,6 +13,7 @@ extern crate dotenv;
 extern crate uuid;
 extern crate bigdecimal;
 extern crate chrono;
+extern crate num_traits;
 
 mod schema;
 mod models;
