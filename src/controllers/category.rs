@@ -1,7 +1,7 @@
 use diesel::pg::PgConnection;
 use bigdecimal::BigDecimal;
 use chrono::NaiveDate;
-use diesel::{self, LoadDsl};
+use diesel::{self, RunQueryDsl};
 
 use models::category::*;
 
@@ -19,7 +19,8 @@ pub fn create_category<'a>(conn: &PgConnection, name: &'a str, allocated: Option
         due_date: due_date,
     };
 
-    diesel::insert(&new_category).into(categories::table)
+    diesel::insert_into(categories::table)
+        .values(&new_category)
         .get_result(conn)
         .expect("Error saving new  category")
 }

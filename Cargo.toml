@@ -6,10 +6,11 @@ authors = ["esty"]
 [dependencies]
 bigdecimal = "*"
 chrono = "*"
-diesel = { version = "0.16.0", features = ["postgres", "uuid", "numeric", "chrono"] }
-diesel_codegen = { version = "0.16.0", features = ["postgres"] }
-diesel_infer_schema = "0.16.0"
+diesel = { version = "1.0.0-rc1", features = ["postgres", "uuid", "numeric", "chrono"] }
+diesel_infer_schema = { version = "1.0.0-rc1", features = ["postgres"] }
 dotenv = "0.10.1"
+r2d2 = "0.8.1"
+r2d2-diesel = "1.0.0-rc1"
 rocket = "0.3.3"
 rocket_codegen = "0.3.3"
 rocket_contrib = { version = "0.3.3", default-features = false, features = ["tera_templates"] }

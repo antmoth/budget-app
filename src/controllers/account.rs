@@ -1,6 +1,6 @@
 use diesel::pg::PgConnection;
 use bigdecimal::BigDecimal;
-use diesel::{self, LoadDsl};
+use diesel::{self, RunQueryDsl};
 
 use models::account::*;
 
@@ -14,8 +14,8 @@ pub fn create_account<'a>(conn: &PgConnection, name: &'a str, cleared_balance: B
         on_budget: on_budget,
     };
 
-    diesel::insert(&new_account).into(accounts::table)
+    diesel::insert_into(accounts::table)
+        .values(&new_account)
         .get_result(conn)
         .expect("Error saving new account")
 }
-

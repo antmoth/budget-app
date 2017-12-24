@@ -1,2 +1,18 @@
-<h1>{{ greeting }} World!</h1>
-<p>I am a tera template</p>
+{% extends "base" %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<div class="mt-3 container">
+  <div class="row">
+    <a href="/budget" class="btn btn-primary">Main Budget</a>
+  </div>
+  <div class="row">
+    <a href="/accounts" class="btn btn-secondary">Accounts</a>
+  </div>
+  <div class="row">
+    <button class="btn btn-success">Recurring Categories</button>
+  </div>
+  <div class="row">
+    <button class="btn btn-secondary">Fluid Categories</button>
+  </div>
+</div>
+{% endblock content %}

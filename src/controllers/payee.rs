@@ -1,5 +1,5 @@
 use diesel::pg::PgConnection;
-use diesel::{self, LoadDsl};
+use diesel::{self, RunQueryDsl};
 
 use models::category::*;
 use models::payee::*;
@@ -15,7 +15,8 @@ pub fn create_payee<'a>(conn: &PgConnection, name: &'a str, default_category: Op
         }
     };
 
-    diesel::insert(&new_payee).into(payees::table)
+    diesel::insert_into(payees::table)
+        .values(&new_payee)
         .get_result(conn)
         .expect("Error saving new payee")
 }

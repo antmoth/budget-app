@@ -1,7 +1,7 @@
 use diesel::pg::PgConnection;
 use bigdecimal::BigDecimal;
 use chrono::NaiveDate;
-use diesel::{self, LoadDsl};
+use diesel::{self, RunQueryDsl};
 
 use models::account::*;
 use models::category::*;
@@ -31,7 +31,8 @@ pub fn create_transaction<'a>(conn: &PgConnection, date: NaiveDate, account: Acc
         cleared: cleared,
     };
 
-    diesel::insert(&new_transaction).into(transactions::table)
+    diesel::insert_into(transactions::table)
+        .values(&new_transaction)
         .get_result(conn)
         .expect("Error saving new transaction")
 }
