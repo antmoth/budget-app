@@ -3,18 +3,18 @@
 {% block content %}
 <div class="mt-3 container">
   <h3>New Account</h3>
-  <form>
+  <form action="/new_account" method="post">
     <div class="form-group">
       <label for="account_name">Account Name</label>
-      <input type="text" id="account_name" placeholder="Enter account name">
+      <input type="text" id="account_name" name="name" placeholder="Enter account name">
     </div>
     <div class="form-group">
       <label for="account_balance">Balance</label>
-      <input type="number" id="account_balance">
+      <input type="number" id="account_balance" name="balance">
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input">
+        <input type="checkbox" class="form-check-input" name="on_budget">
         On Budget
       </label>
     </div>

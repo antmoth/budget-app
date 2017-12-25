@@ -36,6 +36,7 @@ impl<'v> FromFormValue<'v> for Balance {
     type Error = &'v RawStr;
 
     fn from_form_value(form_value: &'v RawStr) -> Result<Balance, &'v RawStr> {
+        println!("{:?}", &form_value.as_bytes());
         match BigDecimal::parse_bytes(&form_value.as_bytes(), 10) {
             Some(val) => Ok(Balance(val)),
             _ => Ok(Balance(BigDecimal::zero())),

@@ -1,6 +1,5 @@
 #![recursion_limit="128"]
-#![feature(plugin)]
-#![feature(custom_derive)]
+#![feature(plugin, custom_derive, try_trait)]
 #![plugin(rocket_codegen)]
 
 #[macro_use] extern crate diesel;
@@ -19,6 +18,8 @@ mod schema;
 mod models;
 mod controllers;
 mod database;
+mod context;
+mod error;
 
 use dotenv::dotenv;
 use std::env;

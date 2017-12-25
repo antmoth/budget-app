@@ -25,6 +25,6 @@ pub fn mount(r: Rocket) -> Rocket {
     r
         .mount("/", [
                routes![index, budget,
-                   account::accounts, account::new_account]
+                   account::accounts, account::new_account, account::new_account_post]
         ].concat())
 }
