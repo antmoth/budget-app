@@ -5,7 +5,6 @@ use rocket::request::Form;
 use rocket::response::Redirect;
 use rocket_contrib::Template;
 use std::collections::HashMap;
-use std::str::FromStr;
 use num_traits::identities::Zero;
 
 use models::account::*;
@@ -23,18 +22,19 @@ pub fn new_account() -> Template {
 
 #[post("/new_account", data = "<account>")]
 pub fn new_account_post(account: Form<FormAccount>) -> Redirect {
+    let account = account.get();
 
     Redirect::to("/accounts")
 }
 
-fn create_account<'a>(conn: &PgConnection, name: &'a str, balance: BigDecimal, on_budget: bool) -> Account {
+fn create_account<'a>(conn: &PgConnection, account: FormAccount) -> Account {
     use schema::accounts;
 
     let new_account = NewAccount {
-        name: name,
-        cleared_balance: balance,
+        name: &account.name,
+        cleared_balance: account.balance.0,
         uncleared_balance: BigDecimal::zero(),
-        on_budget: on_budget,
+        on_budget: account.on_budget,
     };
 
     diesel::insert_into(accounts::table)
