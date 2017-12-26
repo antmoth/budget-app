@@ -1,5 +1,6 @@
 use diesel;
 use r2d2;
+use serde_json;
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -14,6 +15,7 @@ pub enum Error {
     
     DatabasePool { cause: r2d2::Error },
     Database     { cause: diesel::result::Error },
+    Serialize    { cause: serde_json::Error },
 }
 
 impl fmt::Display for Error {
@@ -27,6 +29,7 @@ impl fmt::Display for Error {
 
             Error::DatabasePool {..}      => write!(f, "Database Pool Error")?,
             Error::Database {..}          => write!(f, "Database Error")?,
+            Error::Serialize {..}         => write!(f, "Serialization or deserialization error")?,
         };
 
         match self.cause() {
@@ -45,6 +48,7 @@ impl StdError for Error {
         match *self {
             Error::DatabasePool { ref cause } => Some(cause),
             Error::Database     { ref cause } => Some(cause),
+            Error::Serialize    { ref cause } => Some(cause),
             _ => None,
         }
     }
@@ -72,5 +76,11 @@ impl From<diesel::result::Error> for Error {
             DatabaseError(EK::UniqueViolation, _) => Error::NotUnique,
             _ => Error::Database { cause: err },
         }
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(err: serde_json::Error) -> Error {
+        Error::Serialize { cause: err }
     }
 }

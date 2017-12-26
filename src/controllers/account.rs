@@ -5,7 +5,6 @@ use diesel::{self, RunQueryDsl};
 use rocket::request::LenientForm;
 use rocket::response::Redirect;
 use rocket_contrib::Template;
-use std::collections::HashMap;
 use num_traits::identities::Zero;
 
 use models::account::*;
@@ -13,14 +12,15 @@ use context::Context;
 use error::Error;
 
 #[get("/accounts")]
-pub fn accounts() -> Template {
-    let context = HashMap::<String, String>::new();
-    Template::render("accounts", context)
+pub fn accounts(mut context: Context) -> Result<Template, Error> {
+    let accounts = get_accounts(&context.db);
+    context.data = json!({ "accounts": &accounts });
+    Ok(Template::render("accounts", context))
 }
 
 #[get("/new_account")]
-pub fn new_account() -> Template {
-    Template::render("edit_account", HashMap::<String, String>::new())
+pub fn new_account(context: Context) -> Template {
+    Template::render("edit_account", context)
 }
 
 #[post("/new_account", data = "<account>")]
@@ -49,4 +49,14 @@ fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Account {
         .values(&new_account)
         .get_result(conn)
         .expect("Error saving new account")
+}
+
+fn get_accounts(conn: &PgConnection) -> Vec<Account> {
+    use schema::accounts::dsl::*;
+
+    let results = accounts
+        .load::<Account>(conn)
+        .expect("Error loading accounts");
+
+    results
 }

@@ -4,9 +4,9 @@ version = "0.1.0"
 authors = ["esty"]
 
 [dependencies]
-bigdecimal = "*"
+bigdecimal = { version = "*", features = ["serde"] }
 chrono = "*"
-diesel = { version = "1.0.0-rc1", features = ["postgres", "uuid", "numeric", "chrono"] }
+diesel = { version = "1.0.0-rc1", features = ["postgres", "uuid", "numeric", "chrono", "serde_json"] }
 diesel_infer_schema = { version = "1.0.0-rc1", features = ["postgres"] }
 dotenv = "0.10.1"
 num-traits = "*"
@@ -15,4 +15,7 @@ r2d2-diesel = "1.0.0-rc1"
 rocket = "0.3.3"
 rocket_codegen = "0.3.3"
 rocket_contrib = { version = "0.3.3", default-features = false, features = ["tera_templates"] }
-uuid = { version = "*", features = ["v4"] }
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
+uuid = { version = "*", features = ["v4", "serde"] }

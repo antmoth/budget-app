@@ -5,9 +5,13 @@ use std::ops::Try;
 use rocket::{State, Outcome};
 use rocket::http::Status;
 use error::Error;
+use serde_json::Value;
 
+#[derive(Serialize)]
 pub struct Context {
+    #[serde(skip_serializing)]
     pub db: PgPooledConnection,
+    pub data: Value,
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for Context {
@@ -21,7 +25,8 @@ impl<'a, 'r> FromRequest<'a, 'r> for Context {
             .into_outcome(Status::ServiceUnavailable)?;
 
         let context = Context {
-            db
+            db,
+            data: Value::default(),
         };
 
         Outcome::Success(context)

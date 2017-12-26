@@ -4,6 +4,7 @@
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_infer_schema;
+#[macro_use] extern crate serde_derive;
 extern crate r2d2;
 extern crate r2d2_diesel;
 extern crate rocket;
@@ -13,6 +14,8 @@ extern crate uuid;
 extern crate bigdecimal;
 extern crate chrono;
 extern crate num_traits;
+extern crate serde;
+#[macro_use] extern crate serde_json;
 
 mod schema;
 mod models;

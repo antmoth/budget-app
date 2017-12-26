@@ -5,7 +5,7 @@ use num_traits::Zero;
 use rocket::http::RawStr;
 use rocket::request::FromFormValue;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize, Deserialize)]
 pub struct Account {
     pub id: Uuid,
     pub name: String,

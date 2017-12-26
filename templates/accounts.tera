@@ -12,15 +12,19 @@
         <th scope="col">Cleared Balance</th>
         <th scope="col">Uncleared Balance</th>
         <th scope="col">On Budget</th>
+        <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
+      {% for account in data.accounts %}
       <tr>
-        <th scope="row"></th>
-        <td></td>
-        <td></td>
-        <td></td>
+        <th scope="row">{{ account.name }}</th>
+        <td>{{ account.cleared_balance }}</td>
+        <td>{{ account.uncleared_balance }}</td>
+        <td>{{ account.on_budget }}</td>
+        <td><a href="/edit_account?id={{account.id}}" class="btn btn-sm btn-secondary">Edit</a></td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
