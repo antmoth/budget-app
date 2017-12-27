@@ -2,6 +2,7 @@ use uuid::Uuid;
 use bigdecimal::BigDecimal;
 use chrono::NaiveDate;
 use schema::categories;
+use models::form_values::*;
 
 #[derive(Queryable)]
 pub struct Category {
@@ -23,3 +24,11 @@ pub struct NewCategory<'a> {
     pub due_date: Option<NaiveDate>,
 }
 
+#[derive(FromForm)]
+pub struct FormCategory {
+    pub name: String,
+    pub allocated: Option<FormDecimal>,
+    pub parent_category: Option<FormUuid>,
+    pub due_amount: Option<FormDecimal>,
+    pub due_date: Option<FormDate>,
+}

@@ -1,5 +1,4 @@
-use rocket::Rocket;
-use rocket_contrib::Template;
+use rocket::Rocket; use rocket_contrib::Template;
 use std::collections::HashMap;
 
 mod account;
@@ -22,9 +21,11 @@ fn budget() -> Template {
 }
 
 pub fn mount(r: Rocket) -> Rocket {
-    r
-        .mount("/", [
-               routes![index, budget,
-                   account::accounts, account::new_account, account::new_account_post]
-        ].concat())
+    r.mount("/", [
+        routes![index, budget,
+            account::accounts, account::new_account, account::new_account_post,
+            transaction::new_transaction_post,
+            payee::new_payee_post,
+            category::new_category_post]
+    ].concat())
 }
