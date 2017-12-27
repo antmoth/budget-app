@@ -5,7 +5,7 @@ authors = ["esty"]
 
 [dependencies]
 bigdecimal = { version = "*", features = ["serde"] }
-chrono = "*"
+chrono = { version = "*", features = ["serde"] }
 diesel = { version = "1.0.0-rc1", features = ["postgres", "uuid", "numeric", "chrono", "serde_json"] }
 diesel_infer_schema = { version = "1.0.0-rc1", features = ["postgres"] }
 dotenv = "0.10.1"
