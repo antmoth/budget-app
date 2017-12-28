@@ -32,7 +32,6 @@ pub fn new_account_post(context: Context, account: LenientForm<FormAccount>) -> 
         Ok(Redirect::to("/accounts"))
     })
     .or_else(|e| Err(e))
-
 }
 
 fn get_accounts(conn: &PgConnection) -> Vec<Account> {
