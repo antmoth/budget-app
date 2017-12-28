@@ -35,6 +35,14 @@ pub fn new_account_post(context: Context, account: LenientForm<FormAccount>) -> 
 
 }
 
+fn get_accounts(conn: &PgConnection) -> Vec<Account> {
+    use schema::accounts::dsl::*;
+
+    accounts
+        .load::<Account>(conn)
+        .expect("Error loading accounts")
+}
+
 fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Account {
     use schema::accounts;
 
@@ -49,14 +57,4 @@ fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Account {
         .values(&new_account)
         .get_result(conn)
         .expect("Error saving new account")
-}
-
-fn get_accounts(conn: &PgConnection) -> Vec<Account> {
-    use schema::accounts::dsl::*;
-
-    let results = accounts
-        .load::<Account>(conn)
-        .expect("Error loading accounts");
-
-    results
 }

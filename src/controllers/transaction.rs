@@ -2,10 +2,23 @@ use diesel::pg::PgConnection;
 use diesel::{self, Connection, RunQueryDsl};
 use rocket::response::Redirect;
 use rocket::request::LenientForm;
+use rocket_contrib::Template;
 
 use models::transaction::*;
 use error::Error;
 use context::Context;
+
+#[get("/transactions")]
+pub fn transactions(mut context: Context) -> Result<Template, Error> {
+    let transactions = get_transactions(&context.db);
+    context.data = json!({ "transactions": &transactions });
+    Ok(Template::render("transactions", context))
+}
+
+#[get("/new_transaction")]
+pub fn new_transaction(context: Context) -> Template {
+    Template::render("edit_transaction", context)
+}
 
 #[post("/new_transaction", data = "<transaction>")]
 pub fn new_transaction_post(context: Context, transaction: LenientForm<FormTransaction>) -> Result<Redirect, Error> {
@@ -18,7 +31,15 @@ pub fn new_transaction_post(context: Context, transaction: LenientForm<FormTrans
     .or_else(|e| Err(e))
 }
 
-pub fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction) -> Transaction {
+fn get_transactions(conn: &PgConnection) -> Vec<Transaction> {
+    use schema::transactions::dsl::*;
+
+    transactions
+        .load::<Transaction>(conn)
+        .expect("Error loading transactions")
+}
+
+fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction) -> Transaction {
     use schema::transactions;
 
     let new_transaction = NewTransaction {

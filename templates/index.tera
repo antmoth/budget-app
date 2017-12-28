@@ -14,5 +14,8 @@
   <div class="row">
     <button class="btn btn-secondary">Fluid Categories</button>
   </div>
+  <div class="row">
+    <a href="/payees" class="btn btn-secondary">Payees</a>
+  </div>
 </div>
 {% endblock content %}

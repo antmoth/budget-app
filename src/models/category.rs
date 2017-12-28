@@ -4,7 +4,7 @@ use chrono::NaiveDate;
 use schema::categories;
 use models::form_values::*;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize, Deserialize)]
 pub struct Category {
     pub id: Uuid,
     pub name: String,

@@ -1,0 +1,18 @@
+{% extends "base" %}
+{% block title %}New Payee{% endblock title %}
+{% block content %}
+<div class="mt-3 container">
+  <h3>New Payee</h3>
+  <form action="/new_payee" method="post">
+    <div class="form-group">
+      <label for="payee_name">Payee Name</label>
+      <input type="text" id="payee_name" name="name" placeholder="Enter payee name">
+    </div>
+    <div class="form-group">
+      <label for="payee_default_category">Default Category</label>
+      <!-- todo: options in tera? -->
+    </div>
+    <button type="submit" class="btn btn-primary">Save Payee</button>
+  </form>
+</div>
+{% endblock content %}

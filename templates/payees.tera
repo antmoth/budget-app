@@ -1,0 +1,26 @@
+{% extends "base" %}
+{% block title %}Payees{% endblock title %}
+{% block content %}
+<div class="mt-3 mb-3 container">
+  <a href="/new_payee" class="btn btn-primary">New Payee</a>
+</div>
+<div class="mt-3 container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Default Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payee in data.payees %}
+      <tr>
+        <th scope="row">{{ payee.name }}</th>
+        <td>{{ payee.default_category.name }}</td>
+        <td><a href="/edit_payee?id={{account.id}}" class="btn btn-sm btn-secondary">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
