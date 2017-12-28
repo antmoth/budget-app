@@ -12,6 +12,7 @@ pub struct Category {
     pub parent_category: Option<Uuid>,
     pub due_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
+    pub recurring: bool,
 }
 
 #[derive(Insertable)]
@@ -22,6 +23,7 @@ pub struct NewCategory<'a> {
     pub parent_category: Option<Uuid>,
     pub due_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
+    pub recurring: bool,
 }
 
 #[derive(FromForm)]
@@ -31,4 +33,5 @@ pub struct FormCategory {
     pub parent_category: Option<FormUuid>,
     pub due_amount: Option<FormDecimal>,
     pub due_date: Option<FormDate>,
+    pub recurring: bool,
 }

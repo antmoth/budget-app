@@ -34,7 +34,7 @@ pub fn new_account_post(context: Context, account: LenientForm<FormAccount>) -> 
     .or_else(|e| Err(e))
 }
 
-fn get_accounts(conn: &PgConnection) -> Vec<Account> {
+pub fn get_accounts(conn: &PgConnection) -> Vec<Account> {
     use schema::accounts::dsl::*;
 
     accounts

@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
       <label for="account_balance">Balance</label>
-      <input type="number" id="account_balance" name="balance">
+      <input type="number" step = "0.01" id="account_balance" name="balance">
     </div>
     <div class="form-check">
       <label class="form-check-label">

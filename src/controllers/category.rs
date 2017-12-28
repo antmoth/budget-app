@@ -1,6 +1,6 @@
 use diesel::pg::PgConnection;
-use diesel::Connection;
-use diesel::{self, RunQueryDsl};
+use diesel::{Connection, ExpressionMethods};
+use diesel::{self, QueryDsl, RunQueryDsl};
 use rocket::response::Redirect;
 use rocket::request::LenientForm;
 use rocket_contrib::Template;
@@ -9,11 +9,21 @@ use models::category::*;
 use error::Error;
 use context::Context;
 
-#[get("/categories")]
-pub fn categories(mut context: Context) -> Result<Template, Error> {
-    let categories = get_categories(&context.db);
+#[get("/recurring_categories")]
+pub fn recurring_categories(mut context: Context) -> Result<Template, Error> {
+    let categories = get_categories(&context.db, true);
 
-    context.data = json!({ "categories": &categories });
+    context.data = json!({ "categories": &categories,
+        "recurring": true});
+    Ok(Template::render("categories", context))
+}
+
+#[get("/fluid_categories")]
+pub fn fluid_categories(mut context: Context) -> Result<Template, Error> {
+    let categories = get_categories(&context.db, false);
+
+    context.data = json!({ "categories": &categories,
+        "recurring": false});
     Ok(Template::render("categories", context))
 }
 
@@ -33,10 +43,11 @@ pub fn new_category_post(context: Context, category: LenientForm<FormCategory>) 
     .or_else(|e| Err(e))
 }
 
-fn get_categories(conn: &PgConnection) -> Vec<Category> {
-    use schema::categories::dsl::*;
+pub fn get_categories(conn: &PgConnection, recurring: bool) -> Vec<Category> {
+    use schema::categories::{self, dsl};
 
-    categories
+    categories::table
+        .filter(dsl::recurring.eq(recurring))
         .load::<Category>(conn)
         .expect("Error loading categories")
 }
@@ -62,6 +73,7 @@ fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Category
             Some(ref d) => Some(d.0),
             _ => None,
         },
+        recurring: category.recurring,
     };
 
     diesel::insert_into(categories::table)

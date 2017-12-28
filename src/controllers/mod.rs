@@ -19,7 +19,8 @@ pub fn mount(r: Rocket) -> Rocket {
             payee::payees,
             payee::new_payee,
             payee::new_payee_post,
-            category::categories,
+            category::fluid_categories,
+            category::recurring_categories,
             category::new_category,
             category::new_category_post]
     ].concat())

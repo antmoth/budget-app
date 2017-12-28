@@ -5,6 +5,16 @@
 {% endblock head %}
 {% block content %}
 <div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h3>Cleared Balance</h3><br />
+      {{ data.cleared }}
+    </div>
+    <div class="col-6">
+      <h3>Uncleared Balance</h3><br />
+      {{ data.uncleared }}
+    </div>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -18,26 +28,34 @@
       </tr>
     </thead>
     <tbody>
+      {% for category in data.fluid %}
       <tr>
-        <th scope="row">Groceries</th>
-        <td>$200</td>
-        <td>$150</td>
+        <th scope="row">{{ category.name }}</th>
+        <td>{{ category.allocated }}</td>
+        <td>-- TODO --</td>
         <td>--</td>
         <td>--</td>
-        <td>$50</td>
+        <td>-- TODO --</td>
         <td>--</td>
       </tr>
+      {% endfor %}
       <tr>
-        <th scope="row">Rent</th>
-        <td>$0</td>
-        <td>--</td>
-        <td>$400</td>
-        <td>Jan 1 2018</td>
-        <td>$400</td>
-        <td class="table-info">$100 per week</td>
+        <td colspan="7"><hr /></td>
       </tr>
+      {% for category in data.recurring %}
+      <tr>
+        <th scope="row">{{ category.name }}</th>
+        <td>{{ category.allocated }}</td>
+        <td>-- TODO --</td>
+        <td>{{ category.due_amount }}</td>
+        <td>{{ category.due_date }}</td>
+        <td>-- TODO --</td>
+        <td class="table-info">-- TODO --</td>
+      </tr>
+      {% endfor %}
     </tbody>
   </table>
+  <a href="/" class="btn btn-sm btn-secondary">Home</a>
 </div>
 {% endblock content %}
 {% block script %}

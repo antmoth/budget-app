@@ -9,10 +9,10 @@
     <a href="/accounts" class="btn btn-secondary">Accounts</a>
   </div>
   <div class="row">
-    <button class="btn btn-success">Recurring Categories</button>
+    <a href="/recurring_categories" class="btn btn-success">Recurring Categories</a>
   </div>
   <div class="row">
-    <button class="btn btn-secondary">Fluid Categories</button>
+    <a href="/fluid_categories" class="btn btn-secondary">Fluid Categories</a>
   </div>
   <div class="row">
     <a href="/payees" class="btn btn-secondary">Payees</a>

@@ -1,0 +1,37 @@
+{% extends "base" %}
+{% block title %}{% if data.recurring %}Recurring{% else %}Fluid{% endif %} Categories{% endblock title %}
+{% block content %}
+<div class="mt-3 mb-3 container">
+  <a href="/new_category" class="btn btn-primary">New Category</a>
+</div>
+<div class="mt-3 container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Allocated</th>
+        <th scope="col">Parent Category</th>
+        {% if data.recurring %}
+        <th scope="col">Due Amount</th>
+        <th scope="col">Due Date</th>
+        {% endif %}
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in data.categories %}
+      <tr>
+        <th scope="row">{{ category.name }}</th>
+        <td>{{ category.parent_category.name }}</td>
+        {% if data.recurring %}
+        <td>{{ category.due_amount }}</td>
+        <td>{{ category.due_date }}</td>
+        {% endif %}
+        <td><a href="/edit_category?id={{category.id}}" class="btn btn-sm btn-secondary">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
+

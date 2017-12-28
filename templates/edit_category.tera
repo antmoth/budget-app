@@ -1,0 +1,37 @@
+{% extends "base" %}
+{% block title %}New Category{% endblock title %}
+{% block content %}
+<div class="mt-3 container">
+  <h3>New Category</h3>
+  <form action="/new_category" method="post">
+    <div class="form-group">
+      <label for="account_name">Category Name</label>
+      <input type="text" id="category_name" name="name" placeholder="Enter category name">
+    </div>
+    <div class="form-group">
+      <label for="category_allocated">Allocated</label>
+      <input type="number" id="category_allocated" name="allocated">
+    </div>
+    <div class="form-group">
+      <label for="category_parent_category">Parent Category</label>
+      <input type="text" id="category_parent_category" name="parent_category">
+    </div>
+    <div class="form-group">
+      <label for="category_due_amount">Due Amount</label>
+      <input type="number" id="category_due_amount" name="due_amount">
+    </div>
+    <div class="form-group">
+      <label for="category_due_date">Due Date</label>
+      <input type="date" id="category_due_date" name="due_date">
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" name="recurring">
+        Recurring
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Account</button>
+  </form>
+</div>
+{% endblock content %}
+
