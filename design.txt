@@ -1,23 +1,26 @@
 'fluid' categories with unpredictable expenses, like groceries
-'recurring' categories with repeating or manual due dates, like rent
-'one-time' categories with a goal, which may or may not have a due date
-Show amount spent in (fluid?) categories this month... instead of month, last 4 weeks? 31 days?
-Have some notion of "on track" for recurring categories
-How much time is there until the due date?
-What is the most reasonable chunk of time to subdivide? (e.g., car insurance is every 6 months -- allocate monthly until it's a month away. Rent is monthly -- allocate weekly)
-For recurring categories: am I on track? (that is, is the amount of money allocated as a fraction of the total due equal to or greater than the amount of time passed as a fraction of the time to pay?)
+	If I go over the allocation, show only the total amount spent, with $0 allocated and N/A remaining
 
-fluid category:
+'goal' categories with a due_amount and optional due_date
+	Later introduce notion of recurring goal categories
+	When I record transactions in the goal category that add up to exactly the total amount, 'archive' the category
+
+Show amount spent in (fluid?) categories over the last 4 weeks
+For goal categories with due dates: am I on track? (that is, is the amount of money allocated as a fraction of the total due equal to or greater than the amount of time passed as a fraction of the time to pay?)
+
+At the top of the budget page, show:
+UNALLOCATED	ALLOCATED	TOTAL AVAILABLE
+$250		$600		$850
+
+fluid categories:
 NAME		ALLOCATED	SPENT THIS MONTH	REMAINING
 Groceries	$150		$100			$50
+Fuel		$0		$63.52			--
 
-recurring category:
+goal categories:
 NAME		ALLOCATED	DUE AMOUNT/DATE		NEEDED/TIME
 Rent		$200		$400 Dec 1		$200 ($400/wk) [red]
 Car Insurance	$100		$700 Jun 1		$600 ($100/mo) [blue]
 Car Reg		$60		$89 Nov 15 2018		$19 ($1.60/mo) [green]
-
-one-time category:
-NAME		ALLOCATED	DUE AMOUNT/DATE		NEEDED/TIME
 New bike	$50		$600			$550
 Taxes		$2000		$2200 Apr 15		$200 ($50/mo) [green]
