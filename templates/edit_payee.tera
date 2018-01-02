@@ -10,7 +10,12 @@
     </div>
     <div class="form-group">
       <label for="payee_default_category">Default Category</label>
-      <!-- todo: options in tera? -->
+      <select name="default_category" id="payee_default_category">
+        <option value="null" selected>None</option>
+        {% for category in data.categories %}
+        <option value="category.id">{{ category.name }}</option>
+        {% endfor %}
+      </select>
     </div>
     <button type="submit" class="btn btn-primary">Save Payee</button>
   </form>

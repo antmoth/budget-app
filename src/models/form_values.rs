@@ -3,7 +3,7 @@ use bigdecimal::BigDecimal;
 use uuid::Uuid;
 use chrono::NaiveDate;
 use rocket::http::RawStr;
-use rocket::request::FromFormValue;
+use rocket::request::{FromFormValue, FromParam};
 
 pub struct FormDecimal(pub BigDecimal);
 pub struct FormDate(pub NaiveDate);
@@ -36,6 +36,17 @@ impl<'v> FromFormValue<'v> for FormUuid {
 
     fn from_form_value(form_value: &'v RawStr) -> Result<FormUuid, &'v str> {
         match Uuid::parse_str(&form_value) {
+            Ok(uuid) => Ok(FormUuid(uuid)),
+            _ => Err("Unable to parse uuid")
+        }
+    }
+}
+
+impl<'v> FromParam<'v> for FormUuid {
+    type Error = &'v str;
+
+    fn from_param(param: &'v RawStr) -> Result<FormUuid, &'v str> {
+        match Uuid::parse_str(&param) {
             Ok(uuid) => Ok(FormUuid(uuid)),
             _ => Err("Unable to parse uuid")
         }

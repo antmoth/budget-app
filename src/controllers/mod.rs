@@ -22,6 +22,7 @@ pub fn mount(r: Rocket) -> Rocket {
             category::fluid_categories,
             category::recurring_categories,
             category::new_category,
-            category::new_category_post]
+            category::new_category_post,
+            category::edit_category]
     ].concat())
 }

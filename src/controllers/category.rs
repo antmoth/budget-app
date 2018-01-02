@@ -1,11 +1,10 @@
-use diesel::pg::PgConnection;
-use diesel::{Connection, ExpressionMethods};
-use diesel::{self, QueryDsl, RunQueryDsl};
+use diesel::{Connection};
 use rocket::response::Redirect;
 use rocket::request::LenientForm;
 use rocket_contrib::Template;
 
 use models::category::*;
+use models::form_values::FormUuid;
 use error::Error;
 use context::Context;
 
@@ -43,42 +42,10 @@ pub fn new_category_post(context: Context, category: LenientForm<FormCategory>) 
     .or_else(|e| Err(e))
 }
 
-pub fn get_categories(conn: &PgConnection, recurring: bool) -> Vec<Category> {
-    use schema::categories::{self, dsl};
+#[get("/edit_category/<id>")]
+pub fn edit_category(mut context: Context, id: FormUuid) -> Template {
+    let category = get_category(&context.db, id.0);
 
-    categories::table
-        .filter(dsl::recurring.eq(recurring))
-        .load::<Category>(conn)
-        .expect("Error loading categories")
+    context.data = json!({ "category": &category });
+    Template::render("edit_category", context)
 }
-
-fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Category {
-    use schema::categories;
-
-    let new_category = NewCategory {
-        name: &category.name,
-        allocated: match category.allocated {
-            Some(ref a) => Some(a.0.clone()),
-            _ => None,
-        },
-        parent_category: match category.parent_category {
-            Some(ref u) => Some(u.0),
-            _ => None,
-        },
-        due_amount: match category.due_amount {
-            Some(ref a) => Some(a.0.clone()),
-            _ => None,
-        },
-        due_date: match category.due_date {
-            Some(ref d) => Some(d.0),
-            _ => None,
-        },
-        recurring: category.recurring,
-    };
-
-    diesel::insert_into(categories::table)
-        .values(&new_category)
-        .get_result(conn)
-        .expect("Error saving new  category")
-}
-

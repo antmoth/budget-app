@@ -3,7 +3,7 @@ use context::Context;
 use bigdecimal::BigDecimal;
 use num_traits::Zero;
 
-use models::account::Account;
+use models::account::{self, Account};
 
 #[get("/")]
 pub fn index(context: Context) -> Template {
@@ -12,11 +12,11 @@ pub fn index(context: Context) -> Template {
 
 #[get("/budget")]
 pub fn budget(mut context: Context) -> Template {
-    use controllers;
+    use models::category;
 
-    let fluid = controllers::category::get_categories(&context.db, false);
-    let recurring = controllers::category::get_categories(&context.db, true);
-    let accounts = controllers::account::get_accounts(&context.db);
+    let fluid = category::get_categories(&context.db, false);
+    let recurring = category::get_categories(&context.db, true);
+    let accounts = account::get_accounts(&context.db);
     let accounts: Vec<&Account> = accounts.iter().filter(|a| a.on_budget).collect();
     let cleared = accounts.iter()
         .map(|a| a.cleared_balance.clone())

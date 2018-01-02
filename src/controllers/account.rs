@@ -1,11 +1,7 @@
-use diesel::pg::PgConnection;
 use diesel::Connection;
-use bigdecimal::BigDecimal;
-use diesel::{self, RunQueryDsl};
 use rocket::request::LenientForm;
 use rocket::response::Redirect;
 use rocket_contrib::Template;
-use num_traits::identities::Zero;
 
 use models::account::*;
 use context::Context;
@@ -32,28 +28,4 @@ pub fn new_account_post(context: Context, account: LenientForm<FormAccount>) -> 
         Ok(Redirect::to("/accounts"))
     })
     .or_else(|e| Err(e))
-}
-
-pub fn get_accounts(conn: &PgConnection) -> Vec<Account> {
-    use schema::accounts::dsl::*;
-
-    accounts
-        .load::<Account>(conn)
-        .expect("Error loading accounts")
-}
-
-fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Account {
-    use schema::accounts;
-
-    let new_account = NewAccount {
-        name: &account.name,
-        cleared_balance: account.balance.0.clone(),
-        uncleared_balance: BigDecimal::zero(),
-        on_budget: account.on_budget,
-    };
-
-    diesel::insert_into(accounts::table)
-        .values(&new_account)
-        .get_result(conn)
-        .expect("Error saving new account")
 }
