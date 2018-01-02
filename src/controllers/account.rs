@@ -9,7 +9,7 @@ use error::Error;
 
 #[get("/accounts")]
 pub fn accounts(mut context: Context) -> Result<Template, Error> {
-    let accounts = get_accounts(&context.db);
+    let accounts = get_accounts(&context.db)?;
     context.data = json!({ "accounts": &accounts });
     Ok(Template::render("accounts", context))
 }

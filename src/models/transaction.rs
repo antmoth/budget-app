@@ -2,19 +2,23 @@ use diesel::pg::PgConnection;
 use diesel::{self, RunQueryDsl};
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 
 use schema::transactions;
 use models::form_values::*;
+use models::account::Account;
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Identifiable, Associations, Queryable, Serialize, Deserialize)]
+#[belongs_to(Account)]
 pub struct Transaction {
     pub id: Uuid,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
     pub date: NaiveDate,
-    pub account: Uuid,
-    pub category: Option<Uuid>,
-    pub payee: Option<Uuid>,
-    pub parent_transaction: Option<Uuid>,
+    pub account_id: Uuid,
+    pub category_id: Option<Uuid>,
+    pub payee_id: Option<Uuid>,
+    pub parent_transaction_id: Option<Uuid>,
     pub amount: BigDecimal,
     pub memo: Option<String>,
     pub cleared: bool,
@@ -24,10 +28,10 @@ pub struct Transaction {
 #[table_name="transactions"]
 pub struct NewTransaction<'a> {
     pub date: NaiveDate,
-    pub account: Uuid,
-    pub category: Option<Uuid>,
-    pub payee: Option<Uuid>,
-    pub parent_transaction: Option<Uuid>,
+    pub account_id: Uuid,
+    pub category_id: Option<Uuid>,
+    pub payee_id: Option<Uuid>,
+    pub parent_transaction_id: Option<Uuid>,
     pub amount: BigDecimal,
     pub memo: Option<&'a str>,
     pub cleared: bool,
@@ -36,10 +40,10 @@ pub struct NewTransaction<'a> {
 #[derive(FromForm)]
 pub struct FormTransaction {
     pub date: FormDate,
-    pub account: FormUuid,
-    pub category: Option<FormUuid>,
-    pub payee: Option<FormUuid>,
-    pub parent_transaction: Option<FormUuid>,
+    pub account_id: FormUuid,
+    pub category_id: Option<FormUuid>,
+    pub payee_id: Option<FormUuid>,
+    pub parent_transaction_id: Option<FormUuid>,
     pub amount: FormDecimal,
     pub memo: Option<String>,
     pub cleared: bool,
@@ -58,17 +62,17 @@ pub fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction
 
     let new_transaction = NewTransaction {
         date: transaction.date.0,
-        account: transaction.account.0,
-        category: match transaction.category {
-            Some(ref u) => Some(u.0),
+        account_id: transaction.account_id.0,
+        category_id: match transaction.category_id {
+            Some(ref cid) => Some(cid.0),
             _ => None,
         },
-        payee: match transaction.payee {
-            Some(ref u) => Some(u.0),
+        payee_id: match transaction.payee_id {
+            Some(ref pid) => Some(pid.0),
             _ => None,
         },
-        parent_transaction: match transaction.parent_transaction {
-            Some(ref u) => Some(u.0),
+        parent_transaction_id: match transaction.parent_transaction_id {
+            Some(ref tid) => Some(tid.0),
             _ => None,
         },
         amount: transaction.amount.0.clone(),

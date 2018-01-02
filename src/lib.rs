@@ -1,5 +1,5 @@
 #![recursion_limit="128"]
-#![feature(plugin, custom_derive, try_trait)]
+#![feature(plugin, custom_derive, custom_attribute, try_trait)]
 #![plugin(rocket_codegen)]
 
 #[macro_use] extern crate diesel;

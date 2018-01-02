@@ -20,7 +20,7 @@ pub fn mount(r: Rocket) -> Rocket {
             payee::new_payee,
             payee::new_payee_post,
             category::fluid_categories,
-            category::recurring_categories,
+            category::goal_categories,
             category::new_category,
             category::new_category_post,
             category::edit_category]

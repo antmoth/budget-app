@@ -1,3 +1,0 @@
-ALTER TABLE categories
-	ADD COLUMN due_amount NUMERIC(8,2) DEFAULT 0,
-	ADD COLUMN due_date DATE;

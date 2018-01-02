@@ -8,21 +8,21 @@ use models::form_values::FormUuid;
 use error::Error;
 use context::Context;
 
-#[get("/recurring_categories")]
-pub fn recurring_categories(mut context: Context) -> Result<Template, Error> {
-    let categories = get_categories(&context.db, true);
+#[get("/goal_categories")]
+pub fn goal_categories(mut context: Context) -> Result<Template, Error> {
+    let categories = get_categories(&context.db, false);
 
     context.data = json!({ "categories": &categories,
-        "recurring": true});
+        "fluid": false});
     Ok(Template::render("categories", context))
 }
 
 #[get("/fluid_categories")]
 pub fn fluid_categories(mut context: Context) -> Result<Template, Error> {
-    let categories = get_categories(&context.db, false);
+    let categories = get_categories(&context.db, true);
 
     context.data = json!({ "categories": &categories,
-        "recurring": false});
+        "fluid": true});
     Ok(Template::render("categories", context))
 }
 

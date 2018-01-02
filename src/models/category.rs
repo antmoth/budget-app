@@ -1,6 +1,6 @@
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::{self, ExpressionMethods, QueryDsl, RunQueryDsl};
 
@@ -10,12 +10,14 @@ use models::form_values::*;
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Category {
     pub id: Uuid,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
     pub name: String,
     pub allocated: Option<BigDecimal>,
-    pub parent_category: Option<Uuid>,
+    pub parent_category_id: Option<Uuid>,
     pub due_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
-    pub recurring: bool,
+    pub fluid: bool,
 }
 
 #[derive(Insertable)]
@@ -23,20 +25,20 @@ pub struct Category {
 pub struct NewCategory<'a> {
     pub name: &'a str,
     pub allocated: Option<BigDecimal>,
-    pub parent_category: Option<Uuid>,
+    pub parent_category_id: Option<Uuid>,
     pub due_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
-    pub recurring: bool,
+    pub fluid: bool,
 }
 
 #[derive(FromForm)]
 pub struct FormCategory {
     pub name: String,
     pub allocated: Option<FormDecimal>,
-    pub parent_category: Option<FormUuid>,
+    pub parent_category_id: Option<FormUuid>,
     pub due_amount: Option<FormDecimal>,
     pub due_date: Option<FormDate>,
-    pub recurring: bool,
+    pub fluid: bool,
 }
 
 pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
@@ -52,9 +54,9 @@ pub fn get_all_categories(conn: &PgConnection) -> Vec<Category> {
         .expect("Error loading categories")
 }
 
-pub fn get_categories(conn: &PgConnection, recurring: bool) -> Vec<Category> {
+pub fn get_categories(conn: &PgConnection, fluid: bool) -> Vec<Category> {
     categories::table
-        .filter(dsl::recurring.eq(recurring))
+        .filter(dsl::fluid.eq(fluid))
         .load::<Category>(conn)
         .expect("Error loading categories")
 }
@@ -68,8 +70,8 @@ pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Cate
             Some(ref a) => Some(a.0.clone()),
             _ => None,
         },
-        parent_category: match category.parent_category {
-            Some(ref u) => Some(u.0),
+        parent_category_id: match category.parent_category_id {
+            Some(ref cid) => Some(cid.0),
             _ => None,
         },
         due_amount: match category.due_amount {
@@ -80,7 +82,7 @@ pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Cate
             Some(ref d) => Some(d.0),
             _ => None,
         },
-        recurring: category.recurring,
+        fluid: category.fluid,
     };
 
     diesel::insert_into(categories::table)

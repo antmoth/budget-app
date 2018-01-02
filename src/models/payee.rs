@@ -1,6 +1,7 @@
 use diesel::pg::PgConnection;
 use uuid::Uuid;
 use diesel::{self, QueryDsl, RunQueryDsl};
+use chrono::{DateTime, Utc};
 
 use schema::payees;
 use models::form_values::FormUuid;
@@ -9,21 +10,23 @@ use models::category::Category;
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Payee {
     pub id: Uuid,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
     pub name: String,
-    pub default_category: Option<Uuid>,
+    pub default_category_id: Option<Uuid>,
 }
 
 #[derive(Insertable)]
 #[table_name="payees"]
 pub struct NewPayee<'a> {
     pub name: &'a str,
-    pub default_category: Option<Uuid>,
+    pub default_category_id: Option<Uuid>,
 }
 
 #[derive(FromForm)]
 pub struct FormPayee {
     pub name: String,
-    pub default_category: Option<FormUuid>,
+    pub default_category_id: Option<FormUuid>,
 }
 
 pub fn get_payees(conn: &PgConnection) -> Vec<(Payee, Option<Category>)> {
@@ -40,8 +43,8 @@ pub fn create_payee<'a>(conn: &PgConnection, payee: &FormPayee) -> Payee {
 
     let new_payee = NewPayee {
         name: &payee.name,
-        default_category: match payee.default_category {
-            Some(ref u) => Some(u.0),
+        default_category_id: match payee.default_category_id {
+            Some(ref cid) => Some(cid.0),
             _ => None,
         }
     };

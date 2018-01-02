@@ -9,7 +9,7 @@
     <a href="/accounts" class="btn btn-secondary">Accounts</a>
   </div>
   <div class="row">
-    <a href="/recurring_categories" class="btn btn-success">Recurring Categories</a>
+    <a href="/goal_categories" class="btn btn-success">Goal Categories</a>
   </div>
   <div class="row">
     <a href="/fluid_categories" class="btn btn-secondary">Fluid Categories</a>
