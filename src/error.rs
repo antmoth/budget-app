@@ -1,6 +1,7 @@
 use diesel;
 use r2d2;
 use serde_json;
+use chrono;
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -16,6 +17,7 @@ pub enum Error {
     DatabasePool { cause: r2d2::Error },
     Database     { cause: diesel::result::Error },
     Serialize    { cause: serde_json::Error },
+    Parse        { cause: chrono::ParseError },
 }
 
 impl fmt::Display for Error {
@@ -30,6 +32,8 @@ impl fmt::Display for Error {
             Error::DatabasePool {..}      => write!(f, "Database Pool Error")?,
             Error::Database {..}          => write!(f, "Database Error")?,
             Error::Serialize {..}         => write!(f, "Serialization or deserialization error")?,
+
+            Error::Parse {..}             => write!(f, "Parse error")?,
         };
 
         match self.cause() {
@@ -82,5 +86,11 @@ impl From<diesel::result::Error> for Error {
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Error {
         Error::Serialize { cause: err }
+    }
+}
+
+impl From<chrono::ParseError> for Error {
+    fn from(err: chrono::ParseError) -> Error {
+        Error::Parse {cause: err }
     }
 }

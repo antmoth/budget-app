@@ -18,11 +18,11 @@
     <tbody>
       {% for account in data.accounts %}
       <tr>
-        <th scope="row">{{ account.name }}</th>
-        <td>{{ account.cleared_balance }}</td>
-        <td>{{ account.uncleared_balance }}</td>
-        <td>{{ account.on_budget }}</td>
-        <td><a href="/edit_account?id={{account.id}}" class="btn btn-sm btn-secondary">Edit</a></td>
+        <th scope="row">{{ account.0.name }}</th>
+        <td>{{ account.0.cleared_balance }}</td>
+        <td>{{ account.0.uncleared_balance }}</td>
+        <td>{{ account.0.on_budget }}</td>
+        <td><a href="/edit_account?id={{account.0.id}}" class="btn btn-sm btn-secondary">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>

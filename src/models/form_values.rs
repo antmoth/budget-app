@@ -4,6 +4,7 @@ use uuid::Uuid;
 use chrono::NaiveDate;
 use rocket::http::RawStr;
 use rocket::request::{FromFormValue, FromParam};
+use std::fmt;
 
 pub struct FormDecimal(pub BigDecimal);
 pub struct FormDate(pub NaiveDate);
@@ -39,6 +40,12 @@ impl<'v> FromFormValue<'v> for FormUuid {
             Ok(uuid) => Ok(FormUuid(uuid)),
             _ => Err("Unable to parse uuid")
         }
+    }
+}
+
+impl fmt::Display for FormUuid {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 

@@ -1,9 +1,9 @@
 #![recursion_limit="128"]
-#![feature(plugin, custom_derive, custom_attribute, try_trait)]
+#![feature(plugin, custom_derive, custom_attribute, try_trait, use_nested_groups)]
 #![plugin(rocket_codegen)]
 
 #[macro_use] extern crate diesel;
-#[macro_use] extern crate diesel_infer_schema;
+extern crate diesel_infer_schema;
 #[macro_use] extern crate serde_derive;
 extern crate r2d2;
 extern crate r2d2_diesel;

@@ -8,7 +8,7 @@ use schema::transactions;
 use models::form_values::*;
 use models::account::Account;
 
-#[derive(Identifiable, Associations, Queryable, Serialize, Deserialize)]
+#[derive(Identifiable, Associations, Queryable, Serialize, Deserialize, Debug)]
 #[belongs_to(Account)]
 pub struct Transaction {
     pub id: Uuid,

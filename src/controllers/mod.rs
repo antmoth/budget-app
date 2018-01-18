@@ -13,6 +13,8 @@ pub fn mount(r: Rocket) -> Rocket {
             account::accounts,
             account::new_account,
             account::new_account_post,
+            account::edit_account,
+            account::edit_account_post,
             transaction::transactions,
             transaction::new_transaction,
             transaction::new_transaction_post,
