@@ -5,52 +5,76 @@
 {% endblock head %}
 {% block content %}
 <div class="container">
-  <div class="row">
-    <div class="col-6">
-      <h3>Cleared Balance</h3><br />
-      {{ data.cleared }}
-    </div>
-    <div class="col-6">
-      <h3>Uncleared Balance</h3><br />
-      {{ data.uncleared }}
-    </div>
-  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Allocated</th>
+        <th>Unallocated</th>
+        <th>Available</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ data.allocated }}</td>
+        <td>{{ data.unallocated }}</td>
+        <td>{{ data.allocated + data.unallocated }}</td>
+      </tr>
+    </tbody>
+  </table>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">Category</th>
         <th scope="col">Allocated</th>
         <th scope="col">Spent This Month</th>
-        <th scope="col">Amount Due</th>
+        <th scope="col">Amount Needed</th>
         <th scope="col">Date Due</th>
-        <th scope="col">Remaining</th>
-        <th scope="col">Per Time</th>
+        <th scope="col">Time Left</th>
+        <th scope="col">Amount Left</th>
       </tr>
     </thead>
     <tbody>
-      {% for category in data.fluid %}
+      {% for category in data.categories %}
+      {% if category.recurring %}
       <tr>
         <th scope="row">{{ category.name }}</th>
         <td>{{ category.allocated }}</td>
-        <td>-- TODO --</td>
+        <td>{{ category.spent_recently }}</td>
         <td>--</td>
         <td>--</td>
-        <td>-- TODO --</td>
+        <td>--</td>
         <td>--</td>
       </tr>
-      {% endfor %}
-      <tr>
-        <td colspan="7"><hr /></td>
-      </tr>
-      {% for category in data.recurring %}
+      {% else %}
       <tr>
         <th scope="row">{{ category.name }}</th>
         <td>{{ category.allocated }}</td>
-        <td>-- TODO --</td>
+        <td>--</td>
         <td>{{ category.due_amount }}</td>
         <td>{{ category.due_date }}</td>
-        <td>-- TODO --</td>
-        <td class="table-info">-- TODO --</td>
+        <td>{{ category.time_left }}</td>
+        <td>{{ category.due_amount - category.allocated }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Cleared Balance</th>
+        <th>Uncleared Balance</th>
+        <th>On Budget</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in accounts %}
+      <tr>
+        <th scope="row">{{ account.name }}</th>
+        <td>{{ account.cleared }}</td>
+        <td>{{ account.uncleared }}</td>
+        <td>{% if account.on_budget %}Yes{% else %}No{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>

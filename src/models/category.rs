@@ -1,10 +1,10 @@
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, Duration, Local, NaiveDate, Utc};
 use diesel::pg::PgConnection;
-use diesel::{self, ExpressionMethods, QueryDsl, RunQueryDsl};
+use diesel::{self, QueryDsl, RunQueryDsl};
 
-use schema::categories::{self, dsl};
+use schema::categories;
 use models::form_values::*;
 
 #[derive(Queryable, Serialize, Deserialize)]
@@ -18,6 +18,17 @@ pub struct Category {
     pub due_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
     pub fluid: bool,
+}
+
+impl Category {
+    fn time_left(&self) -> Duration {
+        let today = NaiveDate::parse_from_str(&format!("{}", Local::today()), "%F%:z").expect("Could not parse today's date");
+        let due = match self.due_date {
+            Some(d) => d,
+            None => today,
+        };
+        return today.signed_duration_since(due)
+    }
 }
 
 #[derive(Insertable)]
@@ -41,6 +52,21 @@ pub struct FormCategory {
     pub fluid: bool,
 }
 
+pub struct WebCategory {
+    pub id: Uuid,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub name: String,
+    pub allocated: Option<BigDecimal>,
+    pub parent_category_id: Option<Uuid>,
+    pub due_amount: Option<BigDecimal>,
+    pub due_date: Option<NaiveDate>,
+    pub fluid: bool,
+    pub spent_recently: Option<BigDecimal>,
+    pub time_left: Option<Duration>,
+    pub due_left: Option<BigDecimal>,
+}
+
 pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
     categories::table
         .find(cid)
@@ -48,15 +74,8 @@ pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
         .expect(&format!("Unable to find category {}", cid))
 }
 
-pub fn get_all_categories(conn: &PgConnection) -> Vec<Category> {
+pub fn get_categories(conn: &PgConnection) -> Vec<Category> {
     categories::table
-        .load::<Category>(conn)
-        .expect("Error loading categories")
-}
-
-pub fn get_categories(conn: &PgConnection, fluid: bool) -> Vec<Category> {
-    categories::table
-        .filter(dsl::fluid.eq(fluid))
         .load::<Category>(conn)
         .expect("Error loading categories")
 }

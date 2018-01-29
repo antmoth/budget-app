@@ -18,7 +18,7 @@ pub fn payees(mut context: Context) -> Result<Template, Error> {
 
 #[get("/new_payee")]
 pub fn new_payee(mut context: Context) -> Template {
-    let categories = category::get_all_categories(&context.db);
+    let categories = category::get_categories(&context.db);
     context.data = json!({ "categories": &categories });
     Template::render("edit_payee", context)
 }
