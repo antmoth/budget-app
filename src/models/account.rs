@@ -16,25 +16,19 @@ pub struct Account {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub name: String,
-    pub cleared_balance: BigDecimal,
-    pub uncleared_balance: BigDecimal,
-    pub on_budget: bool,
 }
 
 #[derive(Insertable)]
 #[table_name="accounts"]
 pub struct NewAccount<'a> {
     pub name: &'a str,
-    pub cleared_balance: BigDecimal,
-    pub uncleared_balance: BigDecimal,
-    pub on_budget: bool,
+    pub initial_balance: BigDecimal,
 }
 
 #[derive(FromForm)]
 pub struct FormAccount {
     pub name: String,
-    pub balance: FormDecimal,
-    pub on_budget: bool,
+    pub balance: Option<FormDecimal>,
 }
 
 pub fn get_account(conn: &PgConnection, aid: Uuid) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
@@ -65,9 +59,7 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
 
     let new_account = NewAccount {
         name: &account.name,
-        cleared_balance: account.balance.0.clone(),
-        uncleared_balance: BigDecimal::zero(),
-        on_budget: account.on_budget,
+        initial_balance: account.balance.0.clone(),
     };
 
     let created_account: Account = diesel::insert_into(accounts::table)
@@ -78,10 +70,7 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
     let new_transaction = NewTransaction {
         date: today,
         account_id: created_account.id,
-        category_id: None,
-        payee_id: None,
-        parent_transaction_id: None,
-        amount: created_account.cleared_balance.clone(),
+        amount: new_account.initial_balance.clone(),
         memo: Some("Initial balance"),
         cleared: true,
     };
@@ -98,15 +87,7 @@ pub fn update_account<'a>(conn: &PgConnection, aid: Uuid, account: &FormAccount)
 
     let (ref _old_account, ref transactions) = get_account(conn, aid)?[0];
 
-    let cleared = transactions.iter().filter(|t| t.cleared)
-        .fold(BigDecimal::zero(), |acc, ref t| acc + t.amount.clone());
-    let uncleared = transactions.iter().filter(|t| !t.cleared)
-        .fold(BigDecimal::zero(), |acc, ref t| acc + t.amount.clone());
-
     Ok(diesel::update(accounts::table)
-        .set((columns::name.eq(&account.name),
-            columns::cleared_balance.eq(cleared),
-            columns::uncleared_balance.eq(uncleared),
-            columns::on_budget.eq(account.on_budget)))
+        .set((columns::name.eq(&account.name)))
         .get_result(conn)?)
 }

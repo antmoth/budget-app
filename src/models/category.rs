@@ -13,11 +13,9 @@ pub struct Category {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub name: String,
-    pub allocated: Option<BigDecimal>,
-    pub parent_category_id: Option<Uuid>,
-    pub due_amount: Option<BigDecimal>,
+    pub allocation: BigDecimal,
+    pub goal_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
-    pub fluid: bool,
 }
 
 impl Category {
@@ -35,37 +33,19 @@ impl Category {
 #[table_name="categories"]
 pub struct NewCategory<'a> {
     pub name: &'a str,
-    pub allocated: Option<BigDecimal>,
-    pub parent_category_id: Option<Uuid>,
-    pub due_amount: Option<BigDecimal>,
+    pub allocation: Option<BigDecimal>,
+    pub goal_amount: Option<BigDecimal>,
     pub due_date: Option<NaiveDate>,
-    pub fluid: bool,
 }
 
 #[derive(FromForm)]
 pub struct FormCategory {
     pub name: String,
-    pub allocated: Option<FormDecimal>,
-    pub parent_category_id: Option<FormUuid>,
-    pub due_amount: Option<FormDecimal>,
+    pub allocation: Option<FormDecimal>,
+    pub goal_amount: Option<FormDecimal>,
     pub due_date: Option<FormDate>,
-    pub fluid: bool,
 }
 
-pub struct WebCategory {
-    pub id: Uuid,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
-    pub name: String,
-    pub allocated: Option<BigDecimal>,
-    pub parent_category_id: Option<Uuid>,
-    pub due_amount: Option<BigDecimal>,
-    pub due_date: Option<NaiveDate>,
-    pub fluid: bool,
-    pub spent_recently: Option<BigDecimal>,
-    pub time_left: Option<Duration>,
-    pub due_left: Option<BigDecimal>,
-}
 
 pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
     categories::table
@@ -85,15 +65,11 @@ pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Cate
 
     let new_category = NewCategory {
         name: &category.name,
-        allocated: match category.allocated {
+        allocation: match category.allocation {
             Some(ref a) => Some(a.0.clone()),
             _ => None,
         },
-        parent_category_id: match category.parent_category_id {
-            Some(ref cid) => Some(cid.0),
-            _ => None,
-        },
-        due_amount: match category.due_amount {
+        goal_amount: match category.due_amount {
             Some(ref a) => Some(a.0.clone()),
             _ => None,
         },
@@ -101,7 +77,6 @@ pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Cate
             Some(ref d) => Some(d.0),
             _ => None,
         },
-        fluid: category.fluid,
     };
 
     diesel::insert_into(categories::table)

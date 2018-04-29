@@ -21,67 +21,61 @@
       </tr>
     </tbody>
   </table>
+
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Category</th>
-        <th scope="col">Allocated</th>
-        <th scope="col">Spent This Month</th>
-        <th scope="col">Amount Needed</th>
-        <th scope="col">Date Due</th>
-        <th scope="col">Time Left</th>
-        <th scope="col">Amount Left</th>
+        <th colwidth="4">Accounts</th>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <th>Balance</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in data.accounts %}
+      <tr class="content-row">
+        <td class="content-cell">
+          <input type="text" value="{{ account.name }}">"</input>
+        </td>
+        <td class="content-cell">{{ account.balance }}</td>
+        <td><a class="btn" href="/accounts/{{ account.id }}">Transactions</a></td>
+        <td><button class="add-row"><strong>+</strong></button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="table">
+    <thead>
+      <tr colwidth="4">Categories</tr>
+      <tr>
+        <th>Name</th>
+        <th>Allocation</th>
+        <th>Goal $</th>
+        <th>Due Date</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for category in data.categories %}
-      {% if category.recurring %}
-      <tr>
-        <th scope="row">{{ category.name }}</th>
-        <td>{{ category.allocated }}</td>
-        <td>{{ category.spent_recently }}</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-      </tr>
-      {% else %}
-      <tr>
-        <th scope="row">{{ category.name }}</th>
-        <td>{{ category.allocated }}</td>
-        <td>--</td>
-        <td>{{ category.due_amount }}</td>
-        <td>{{ category.due_date }}</td>
-        <td>{{ category.time_left }}</td>
-        <td>{{ category.due_amount - category.allocated }}</td>
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-  <table>
-    <thead>
-      <tr>
-        <th>Account</th>
-        <th>Cleared Balance</th>
-        <th>Uncleared Balance</th>
-        <th>On Budget</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for account in accounts %}
-      <tr>
-        <th scope="row">{{ account.name }}</th>
-        <td>{{ account.cleared }}</td>
-        <td>{{ account.uncleared }}</td>
-        <td>{% if account.on_budget %}Yes{% else %}No{% endif %}</td>
+      <tr class="content-row">
+        <td class="content-cell">
+          <input type="text" value="{{ category.name }}"></input>
+        </td>
+        <td class="content-cell">
+          <input type="number" value="{{ category.allocation }}"></input>
+        </td>
+        <td class="content-cell">
+          <input type="number" value="{{ category.goal_amount }}"></input>
+        </td>
+        <td class="content-cell">
+          <input type="date" value="{{ category.due_date }}"></input>
+        </td>
+        <td><button class="add-row"><strong>+</strong></button></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <a href="/" class="btn btn-sm btn-secondary">Home</a>
-</div>
-{% endblock content %}
-{% block script %}
-  {{ super() }}
-{% endblock script %}
