@@ -69,7 +69,7 @@ pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Cate
             Some(ref a) => Some(a.0.clone()),
             _ => None,
         },
-        goal_amount: match category.due_amount {
+        goal_amount: match category.goal_amount {
             Some(ref a) => Some(a.0.clone()),
             _ => None,
         },

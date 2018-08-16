@@ -18,8 +18,6 @@ pub struct Account {
     pub name: String,
 }
 
-#[derive(Insertable)]
-#[table_name="accounts"]
 pub struct NewAccount<'a> {
     pub name: &'a str,
     pub initial_balance: BigDecimal,
@@ -59,7 +57,10 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
 
     let new_account = NewAccount {
         name: &account.name,
-        initial_balance: account.balance.0.clone(),
+        initial_balance: match account.balance {
+            Some(form_val) => form_val.0,
+            None => BigDecimal::zero(),
+        },
     };
 
     let created_account: Account = diesel::insert_into(accounts::table)
@@ -72,7 +73,6 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
         account_id: created_account.id,
         amount: new_account.initial_balance.clone(),
         memo: Some("Initial balance"),
-        cleared: true,
     };
 
     let created_transaction = diesel::insert_into(transactions::table)

@@ -1,7 +1,5 @@
 use rocket::request::{self, Request, FromRequest};
 use database::{PgPool, PgPooledConnection};
-use rocket::outcome::IntoOutcome;
-use std::ops::Try;
 use rocket::{State, Outcome};
 use rocket::http::Status;
 use error::Error;

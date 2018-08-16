@@ -3,8 +3,7 @@ use context::Context;
 use bigdecimal::BigDecimal;
 use num_traits::Zero;
 
-use models::account::{self, Account};
-use models::transaction::Transaction;
+use models::account;
 use error::Error;
 
 #[get("/")]
@@ -18,21 +17,17 @@ pub fn budget(mut context: Context) -> Result<Template, Error> {
 
     let categories = category::get_categories(&context.db);
     let accounts = account::get_accounts(&context.db)?;
-    let budget_accounts: Vec<&(Account, Vec<Transaction>)> = accounts.iter().filter(|a| a.0.on_budget).collect();
-    let cleared = budget_accounts.iter()
-        .map(|a| a.0.cleared_balance.clone())
+    let balances = accounts.iter()
+        .map(|a| a.1.iter().map(|t| t.amount).fold(BigDecimal::zero(), |t, u| t + u))
         .fold(BigDecimal::zero(), |acc, x| acc + x);
     let allocated = categories.iter()
-        .map(|c| match c.allocated.clone() {
-            Some(a) => a,
-            None => BigDecimal::zero()
-        })
+        .map(|c| c.allocation)
         .fold(BigDecimal::zero(), |acc, x| acc + x);
-    let unallocated = cleared.clone() - allocated.clone();
+    let unallocated = balances.clone() - allocated.clone();
 
     context.data = json!({ "allocated": &allocated,
         "unallocated": &unallocated,
-        "total": &cleared,
+        "total": &balances,
         "categories": &categories,
         "accounts": &accounts
     });

@@ -3,7 +3,6 @@ use rocket::Rocket;
 mod index;
 mod account;
 mod category;
-mod payee;
 mod transaction;
 
 pub fn mount(r: Rocket) -> Rocket {
@@ -18,9 +17,6 @@ pub fn mount(r: Rocket) -> Rocket {
             transaction::transactions,
             transaction::new_transaction,
             transaction::new_transaction_post,
-            payee::payees,
-            payee::new_payee,
-            payee::new_payee_post,
             category::categories,
             category::new_category,
             category::new_category_post,

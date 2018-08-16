@@ -2,7 +2,6 @@ use std::time::Duration;
 
 use diesel;
 use r2d2::{self, PooledConnection};
-use r2d2_diesel;
 
 pub use diesel::pg::PgConnection;
 pub use diesel::Connection;

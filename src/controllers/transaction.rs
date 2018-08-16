@@ -1,4 +1,3 @@
-use diesel::Connection;
 use rocket::response::Redirect;
 use rocket::request::LenientForm;
 use rocket_contrib::Template;
