@@ -9,7 +9,7 @@ use std::fmt;
 #[derive(Debug)]
 pub enum Error {
     Msg(String),
-    Request(&'static str),
+    _Request(&'static str),
 
     NotFound,
     NotUnique,
@@ -24,7 +24,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Error::Msg(ref msg)           => write!(f, "Error: {}", msg)?,
-            Error::Request(ref msg)       => write!(f, "Request Error: {}", msg)?,
+            Error::_Request(ref msg)       => write!(f, "Request Error: {}", msg)?,
 
             Error::NotFound               => write!(f, "Not Found")?,
             Error::NotUnique              => write!(f, "Unique Violation")?,

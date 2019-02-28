@@ -19,7 +19,7 @@ pub struct Category {
 }
 
 impl Category {
-    fn time_left(&self) -> Duration {
+    fn _time_left(&self) -> Duration {
         let today = NaiveDate::parse_from_str(&format!("{}", Local::today()), "%F%:z").expect("Could not parse today's date");
         let due = match self.due_date {
             Some(d) => d,
