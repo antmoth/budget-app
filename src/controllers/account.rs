@@ -2,12 +2,12 @@ use rocket::request::LenientForm;
 use rocket::response::Redirect;
 use rocket_contrib::templates::Template;
 
-use MainDbConn;
+use crate::MainDbConn;
 use diesel::Connection;
-use models::account::*;
-use models::form_values::FormUuid;
-use context::Context;
-use error::Error;
+use crate::models::account::*;
+use crate::models::form_values::FormUuid;
+use crate::context::Context;
+use crate::error::Error;
 
 #[get("/accounts")]
 pub fn accounts(conn: MainDbConn, mut context: Context) -> Result<Template, Error> {
@@ -17,12 +17,12 @@ pub fn accounts(conn: MainDbConn, mut context: Context) -> Result<Template, Erro
 }
 
 #[get("/new_account")]
-pub fn new_account(conn: MainDbConn, context: Context) -> Template {
+pub fn new_account(_conn: MainDbConn, context: Context) -> Template {
     Template::render("edit_account", context)
 }
 
 #[post("/new_account", data = "<account>")]
-pub fn new_account_post(conn: MainDbConn, context: Context, account: LenientForm<FormAccount>) -> Result<Redirect, Error> {
+pub fn new_account_post(conn: MainDbConn, _context: Context, account: LenientForm<FormAccount>) -> Result<Redirect, Error> {
     let account = account.into_inner();
 
     conn.transaction(|| {
@@ -41,7 +41,7 @@ pub fn edit_account(conn: MainDbConn, mut context: Context, id: FormUuid) -> Res
 }
 
 #[post("/edit_account/<id>", data = "<account>")]
-pub fn edit_account_post(conn: MainDbConn, context: Context, id: FormUuid, account: LenientForm<FormAccount>) -> Result<Redirect, Error> {
+pub fn edit_account_post(conn: MainDbConn, _context: Context, id: FormUuid, account: LenientForm<FormAccount>) -> Result<Redirect, Error> {
     let account = account.into_inner();
 
     conn.transaction(|| {

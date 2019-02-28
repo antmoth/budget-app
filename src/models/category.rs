@@ -4,8 +4,8 @@ use chrono::{DateTime, Duration, Local, NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::{self, QueryDsl, RunQueryDsl};
 
-use schema::categories;
-use models::form_values::*;
+use crate::schema::categories;
+use crate::models::form_values::*;
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Category {
@@ -61,7 +61,7 @@ pub fn get_categories(conn: &PgConnection) -> Vec<Category> {
 }
 
 pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Category {
-    use schema::categories;
+    use crate::schema::categories;
 
     let new_category = NewCategory {
         name: &category.name,

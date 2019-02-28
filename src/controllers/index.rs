@@ -1,11 +1,11 @@
 use rocket_contrib::templates::Template;
-use context::Context;
+use crate::context::Context;
 use bigdecimal::BigDecimal;
 use num_traits::Zero;
 
-use MainDbConn;
-use models::account;
-use error::Error;
+use crate::MainDbConn;
+use crate::models::account;
+use crate::error::Error;
 
 #[get("/")]
 pub fn index(context: Context) -> Template {
@@ -14,7 +14,7 @@ pub fn index(context: Context) -> Template {
 
 #[get("/budget")]
 pub fn budget(conn: MainDbConn, mut context: Context) -> Result<Template, Error> {
-    use models::category;
+    use crate::models::category;
 
     let categories = category::get_categories(&conn);
     let accounts = account::get_accounts(&conn)?;

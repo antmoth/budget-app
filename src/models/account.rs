@@ -5,10 +5,10 @@ use diesel::pg::PgConnection;
 use diesel::{self, BelongingToDsl, ExpressionMethods, GroupedBy, QueryDsl, RunQueryDsl};
 use chrono::{DateTime, Local, NaiveDate, Utc};
 
-use schema::accounts;
-use models::form_values::*;
-use models::transaction::{NewTransaction, Transaction};
-use error::Error;
+use crate::schema::accounts;
+use crate::models::form_values::*;
+use crate::models::transaction::{NewTransaction, Transaction};
+use crate::error::Error;
 
 #[derive(Identifiable, Associations, Queryable, Serialize, Deserialize, Debug)]
 pub struct Account {
@@ -30,7 +30,7 @@ pub struct FormAccount {
 }
 
 pub fn get_account(conn: &PgConnection, aid: Uuid) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
-    use schema::accounts;
+    use crate::schema::accounts;
 
     let account = accounts::table
         .find(aid)
@@ -42,7 +42,7 @@ pub fn get_account(conn: &PgConnection, aid: Uuid) -> Result<Vec<(Account, Vec<T
 }
 
 pub fn get_accounts(conn: &PgConnection) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
-    use schema::accounts;
+    use crate::schema::accounts;
 
     let accounts = accounts::table
         .load::<Account>(conn)?;
@@ -53,7 +53,7 @@ pub fn get_accounts(conn: &PgConnection) -> Result<Vec<(Account, Vec<Transaction
 }
 
 pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<(Account, Vec<Transaction>), Error> {
-    use schema::{accounts, transactions};
+    use crate::schema::{accounts, transactions};
 
     let new_account = NewAccount {
         name: &account.name,
@@ -83,9 +83,9 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
 }
 
 pub fn update_account<'a>(conn: &PgConnection, aid: Uuid, account: &FormAccount) -> Result<Account, Error> {
-    use schema::accounts::{self, columns};
+    use crate::schema::accounts::{self, columns};
 
-    let (ref _old_account, ref transactions) = get_account(conn, aid)?[0];
+    let (ref _old_account, ref _transactions) = get_account(conn, aid)?[0];
 
     Ok(diesel::update(accounts::table)
         .set(columns::name.eq(&account.name))

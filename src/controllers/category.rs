@@ -2,12 +2,12 @@ use rocket::response::Redirect;
 use rocket::request::LenientForm;
 use rocket_contrib::templates::Template;
 
-use MainDbConn;
+use crate::MainDbConn;
 use diesel::Connection;
-use models::category::*;
-use models::form_values::FormUuid;
-use error::Error;
-use context::Context;
+use crate::models::category::*;
+use crate::models::form_values::FormUuid;
+use crate::error::Error;
+use crate::context::Context;
 
 #[get("/categories")]
 pub fn categories(conn: MainDbConn, mut context: Context) -> Result<Template, Error> {
@@ -19,12 +19,12 @@ pub fn categories(conn: MainDbConn, mut context: Context) -> Result<Template, Er
 }
 
 #[get("/new_category")]
-pub fn new_category(conn: MainDbConn, context: Context) -> Template {
+pub fn new_category(_conn: MainDbConn, context: Context) -> Template {
     Template::render("edit_category", context)
 }
 
 #[post("/new_category", data="<category>")]
-pub fn new_category_post(conn: MainDbConn, context: Context, category: LenientForm<FormCategory>) -> Result<Redirect, Error> {
+pub fn new_category_post(conn: MainDbConn, _context: Context, category: LenientForm<FormCategory>) -> Result<Redirect, Error> {
     let category = category.into_inner();
 
     conn.transaction(|| {

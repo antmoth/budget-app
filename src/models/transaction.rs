@@ -4,9 +4,9 @@ use uuid::Uuid;
 use bigdecimal::BigDecimal;
 use chrono::{DateTime, NaiveDate, Utc};
 
-use schema::transactions;
-use models::form_values::*;
-use models::account::Account;
+use crate::schema::transactions;
+use crate::models::form_values::*;
+use crate::models::account::Account;
 
 #[derive(Identifiable, Associations, Queryable, Serialize, Deserialize, Debug)]
 #[belongs_to(Account)]
@@ -38,7 +38,7 @@ pub struct FormTransaction {
 }
 
 pub fn get_transactions(conn: &PgConnection) -> Vec<Transaction> {
-    use schema::transactions::dsl::*;
+    use crate::schema::transactions::dsl::*;
 
     transactions
         .load::<Transaction>(conn)
@@ -46,7 +46,7 @@ pub fn get_transactions(conn: &PgConnection) -> Vec<Transaction> {
 }
 
 pub fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction) -> Transaction {
-    use schema::transactions;
+    use crate::schema::transactions;
 
     let new_transaction = NewTransaction {
         date: transaction.date.0,
