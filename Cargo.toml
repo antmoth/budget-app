@@ -2,6 +2,7 @@
 name = "budget_app"
 version = "0.1.0"
 authors = ["esty"]
+edition = "2018"
 
 [dependencies]
 bigdecimal = { version = "^0.0.14", features = ["serde"] }
