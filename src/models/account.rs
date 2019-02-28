@@ -52,7 +52,7 @@ pub fn get_accounts(conn: &PgConnection) -> Result<Vec<(Account, Vec<Transaction
     Ok(accounts.into_iter().zip(transactions).collect::<Vec<_>>())
 }
 
-pub fn create_account<'a>(
+pub fn create_account(
     conn: &PgConnection,
     account: &FormAccount,
 ) -> Result<(Account, Vec<Transaction>), Error> {
@@ -85,7 +85,7 @@ pub fn create_account<'a>(
     Ok((created_account, vec![created_transaction]))
 }
 
-pub fn update_account<'a>(
+pub fn update_account(
     conn: &PgConnection,
     aid: Uuid,
     account: &FormAccount,

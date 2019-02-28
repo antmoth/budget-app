@@ -61,5 +61,5 @@ pub fn edit_account_post(
         update_account(&conn, id.0, &account)?;
         Ok(Redirect::to(format!("/edit_account/{}", id)))
     })
-    .or_else(|e| Err(e))
+    .or_else(Err)
 }

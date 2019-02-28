@@ -35,7 +35,7 @@ pub fn new_category_post(
         create_category(&conn, &category);
         Ok(Redirect::to("/budget"))
     })
-    .or_else(|e| Err(e))
+    .or_else(Err)
 }
 
 #[get("/edit_category/<id>")]

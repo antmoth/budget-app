@@ -26,7 +26,7 @@ impl Category {
             Some(d) => d,
             None => today,
         };
-        return today.signed_duration_since(due);
+        today.signed_duration_since(due)
     }
 }
 
@@ -51,7 +51,7 @@ pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
     categories::table
         .find(cid)
         .first(conn)
-        .expect(&format!("Unable to find category {}", cid))
+        .unwrap_or_else(|_| panic!("Unable to find category {}", cid))
 }
 
 pub fn get_categories(conn: &PgConnection) -> Vec<Category> {
@@ -60,7 +60,7 @@ pub fn get_categories(conn: &PgConnection) -> Vec<Category> {
         .expect("Error loading categories")
 }
 
-pub fn create_category<'a>(conn: &PgConnection, category: &FormCategory) -> Category {
+pub fn create_category(conn: &PgConnection, category: &FormCategory) -> Category {
     use crate::schema::categories;
 
     let new_category = NewCategory {

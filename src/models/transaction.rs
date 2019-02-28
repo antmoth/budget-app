@@ -45,7 +45,7 @@ pub fn get_transactions(conn: &PgConnection) -> Vec<Transaction> {
         .expect("Error loading transactions")
 }
 
-pub fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction) -> Transaction {
+pub fn create_transaction(conn: &PgConnection, transaction: &FormTransaction) -> Transaction {
     use crate::schema::transactions;
 
     let new_transaction = NewTransaction {

@@ -32,5 +32,5 @@ pub fn new_transaction_post(
         transaction::create_transaction(&conn, &transaction);
         Ok(Redirect::to("/budget"))
     })
-    .or_else(|e| Err(e))
+    .or_else(Err)
 }
