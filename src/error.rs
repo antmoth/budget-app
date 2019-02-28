@@ -1,5 +1,5 @@
 use diesel;
-use r2d2;
+use diesel::r2d2;
 use serde_json;
 use chrono;
 
@@ -14,10 +14,10 @@ pub enum Error {
     NotFound,
     NotUnique,
     
-    DatabasePool { cause: r2d2::Error },
-    Database     { cause: diesel::result::Error },
-    Serialize    { cause: serde_json::Error },
-    Parse        { cause: chrono::ParseError },
+    DatabasePool { source: r2d2::Error },
+    Database     { source: diesel::result::Error },
+    Serialize    { source: serde_json::Error },
+    Parse        { source: chrono::ParseError },
 }
 
 impl fmt::Display for Error {
@@ -36,8 +36,8 @@ impl fmt::Display for Error {
             Error::Parse {..}             => write!(f, "Parse error")?,
         };
 
-        match self.cause() {
-            Some(cause) => write!(f, " - Cause: {}", cause),
+        match self.source() {
+            Some(source) => write!(f, " - Source: {}", source),
             _ => Ok(()),
         }
     }
@@ -50,9 +50,9 @@ impl StdError for Error {
 
     fn cause(&self) -> Option<&StdError> {
         match *self {
-            Error::DatabasePool { ref cause } => Some(cause),
-            Error::Database     { ref cause } => Some(cause),
-            Error::Serialize    { ref cause } => Some(cause),
+            Error::DatabasePool { ref source } => Some(source),
+            Error::Database     { ref source } => Some(source),
+            Error::Serialize    { ref source } => Some(source),
             _ => None,
         }
     }
@@ -64,12 +64,6 @@ impl<'a> From<&'a str> for Error {
     }
 }
 
-impl From<r2d2::Error> for Error {
-    fn from(err: r2d2::Error) -> Error {
-        Error::DatabasePool { cause: err }
-    }
-}
-
 impl From<diesel::result::Error> for Error {
     fn from(err: diesel::result::Error) -> Error {
         use diesel::result::Error::*;
@@ -78,19 +72,25 @@ impl From<diesel::result::Error> for Error {
         match err {
             NotFound => Error::NotFound,
             DatabaseError(EK::UniqueViolation, _) => Error::NotUnique,
-            _ => Error::Database { cause: err },
+            _ => Error::Database { source: err },
         }
     }
 }
 
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Error {
-        Error::Serialize { cause: err }
+        Error::Serialize { source: err }
     }
 }
 
 impl From<chrono::ParseError> for Error {
     fn from(err: chrono::ParseError) -> Error {
-        Error::Parse {cause: err }
+        Error::Parse {source: err }
+    }
+}
+
+impl From<r2d2::Error> for Error {
+    fn from(err: r2d2::Error) -> Error {
+        Error::DatabasePool { source: err }
     }
 }

@@ -1,5 +1,4 @@
 #![feature(plugin)]
-#![plugin(rocket_codegen)]
 
 extern crate dotenv;
 extern crate rocket;

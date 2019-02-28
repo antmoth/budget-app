@@ -1,12 +1,10 @@
 #![recursion_limit="128"]
-#![feature(plugin, custom_derive, custom_attribute, try_trait, use_nested_groups)]
-#![plugin(rocket_codegen)]
+#![feature(plugin, custom_attribute, try_trait, decl_macro, proc_macro_hygiene)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate serde_derive;
-extern crate r2d2;
-extern crate rocket;
-extern crate rocket_contrib;
+#[macro_use] extern crate rocket;
+#[macro_use] extern crate rocket_contrib;
 extern crate dotenv;
 extern crate uuid;
 extern crate bigdecimal;
@@ -18,26 +16,22 @@ extern crate serde;
 mod schema;
 mod models;
 mod controllers;
-mod database;
 mod context;
 mod error;
 
 use dotenv::dotenv;
-use std::env;
 use rocket::Rocket;
-use rocket_contrib::Template;
+use rocket_contrib::templates::Template;
+
+#[database("main_db")]
+pub struct MainDbConn(rocket_contrib::databases::diesel::PgConnection);
 
 pub fn ignite() -> Rocket {
     dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
-
-    let db_pool = database::make_pool(&database_url);
-
     let r = rocket::ignite()
-        .manage(db_pool)
-        .attach(Template::fairing());
+        .attach(Template::fairing())
+        .attach(MainDbConn::fairing());
     
     controllers::mount(r)
 }

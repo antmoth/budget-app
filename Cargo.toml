@@ -10,8 +10,7 @@ diesel = { version = "^1.4.1", features = ["postgres", "extras"] }
 dotenv = "^0.13.0"
 num-traits = "^0.2.6"
 rocket = "^0.4.0"
-rocket_codegen = "^0.4.0"
-rocket_contrib = { version = "^0.4.0", default-features = false, features = ["tera_templates"] }
+rocket_contrib = { version = "^0.4.0", default-features = false, features = ["tera_templates", "diesel_postgres_pool"] }
 serde = "^1.0.88"
 serde_json = "^1.0.38"
 serde_derive = "^1.0.88"

@@ -57,14 +57,14 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
 
     let new_account = NewAccount {
         name: &account.name,
-        initial_balance: match account.balance {
-            Some(form_val) => form_val.0,
+        initial_balance: match &account.balance {
+            Some(ref form_val) => form_val.0.clone(),
             None => BigDecimal::zero(),
         },
     };
 
     let created_account: Account = diesel::insert_into(accounts::table)
-        .values(&new_account)
+        .values(accounts::columns::name.eq(&new_account.name))
         .get_result(conn)?;
 
     let today = NaiveDate::parse_from_str(&format!("{}", Local::today()), "%F%:z")?;
@@ -88,6 +88,6 @@ pub fn update_account<'a>(conn: &PgConnection, aid: Uuid, account: &FormAccount)
     let (ref _old_account, ref transactions) = get_account(conn, aid)?[0];
 
     Ok(diesel::update(accounts::table)
-        .set((columns::name.eq(&account.name)))
+        .set(columns::name.eq(&account.name))
         .get_result(conn)?)
 }
