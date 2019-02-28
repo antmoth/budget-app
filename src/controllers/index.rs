@@ -1,11 +1,11 @@
-use rocket_contrib::templates::Template;
 use crate::context::Context;
 use bigdecimal::BigDecimal;
 use num_traits::Zero;
+use rocket_contrib::templates::Template;
 
-use crate::MainDbConn;
-use crate::models::account;
 use crate::error::Error;
+use crate::models::account;
+use crate::MainDbConn;
 
 #[get("/")]
 pub fn index(context: Context) -> Template {
@@ -18,10 +18,16 @@ pub fn budget(conn: MainDbConn, mut context: Context) -> Result<Template, Error>
 
     let categories = category::get_categories(&conn);
     let accounts = account::get_accounts(&conn)?;
-    let balances = accounts.iter()
-        .map(|a| a.1.iter().map(|t| t.amount.clone()).fold(BigDecimal::zero(), |t, u| t + u))
+    let balances = accounts
+        .iter()
+        .map(|a| {
+            a.1.iter()
+                .map(|t| t.amount.clone())
+                .fold(BigDecimal::zero(), |t, u| t + u)
+        })
         .fold(BigDecimal::zero(), |acc, x| acc + x);
-    let allocated = categories.iter()
+    let allocated = categories
+        .iter()
         .map(|c| c.allocation.clone())
         .fold(BigDecimal::zero(), |acc, x| acc + x);
     let unallocated = balances.clone() - allocated.clone();
@@ -34,4 +40,3 @@ pub fn budget(conn: MainDbConn, mut context: Context) -> Result<Template, Error>
     });
     Ok(Template::render("budget", context))
 }
-

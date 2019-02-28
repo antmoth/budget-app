@@ -1,13 +1,15 @@
 use rocket::Rocket;
 
-mod index;
 mod account;
 mod category;
+mod index;
 mod transaction;
 
 pub fn mount(r: Rocket) -> Rocket {
-    r.mount("/", [
-        routes![index::index,
+    r.mount(
+        "/",
+        [routes![
+            index::index,
             index::budget,
             account::accounts,
             account::new_account,
@@ -20,6 +22,8 @@ pub fn mount(r: Rocket) -> Rocket {
             category::categories,
             category::new_category,
             category::new_category_post,
-            category::edit_category]
-    ].concat())
+            category::edit_category
+        ]]
+        .concat(),
+    )
 }

@@ -1,6 +1,6 @@
-use rocket::request::{self, Request, FromRequest};
-use rocket::Outcome;
 use crate::error::Error;
+use rocket::request::{self, FromRequest, Request};
+use rocket::Outcome;
 use serde_json::Value;
 
 #[derive(Serialize)]

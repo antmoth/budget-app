@@ -1,14 +1,14 @@
-use uuid::Uuid;
 use bigdecimal::BigDecimal;
-use num_traits::identities::Zero;
+use chrono::{DateTime, Local, NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::{self, BelongingToDsl, ExpressionMethods, GroupedBy, QueryDsl, RunQueryDsl};
-use chrono::{DateTime, Local, NaiveDate, Utc};
+use num_traits::identities::Zero;
+use uuid::Uuid;
 
-use crate::schema::accounts;
+use crate::error::Error;
 use crate::models::form_values::*;
 use crate::models::transaction::{NewTransaction, Transaction};
-use crate::error::Error;
+use crate::schema::accounts;
 
 #[derive(Identifiable, Associations, Queryable, Serialize, Deserialize, Debug)]
 pub struct Account {
@@ -29,12 +29,13 @@ pub struct FormAccount {
     pub balance: Option<FormDecimal>,
 }
 
-pub fn get_account(conn: &PgConnection, aid: Uuid) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
+pub fn get_account(
+    conn: &PgConnection,
+    aid: Uuid,
+) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
     use crate::schema::accounts;
 
-    let account = accounts::table
-        .find(aid)
-        .load(conn)?;
+    let account = accounts::table.find(aid).load(conn)?;
     let transactions = Transaction::belonging_to(&account)
         .load::<Transaction>(conn)?
         .grouped_by(&account);
@@ -44,15 +45,17 @@ pub fn get_account(conn: &PgConnection, aid: Uuid) -> Result<Vec<(Account, Vec<T
 pub fn get_accounts(conn: &PgConnection) -> Result<Vec<(Account, Vec<Transaction>)>, Error> {
     use crate::schema::accounts;
 
-    let accounts = accounts::table
-        .load::<Account>(conn)?;
+    let accounts = accounts::table.load::<Account>(conn)?;
     let transactions = Transaction::belonging_to(&accounts)
         .load::<Transaction>(conn)?
         .grouped_by(&accounts);
     Ok(accounts.into_iter().zip(transactions).collect::<Vec<_>>())
 }
 
-pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<(Account, Vec<Transaction>), Error> {
+pub fn create_account<'a>(
+    conn: &PgConnection,
+    account: &FormAccount,
+) -> Result<(Account, Vec<Transaction>), Error> {
     use crate::schema::{accounts, transactions};
 
     let new_account = NewAccount {
@@ -82,7 +85,11 @@ pub fn create_account<'a>(conn: &PgConnection, account: &FormAccount) -> Result<
     Ok((created_account, vec![created_transaction]))
 }
 
-pub fn update_account<'a>(conn: &PgConnection, aid: Uuid, account: &FormAccount) -> Result<Account, Error> {
+pub fn update_account<'a>(
+    conn: &PgConnection,
+    aid: Uuid,
+    account: &FormAccount,
+) -> Result<Account, Error> {
     use crate::schema::accounts::{self, columns};
 
     let (ref _old_account, ref _transactions) = get_account(conn, aid)?[0];

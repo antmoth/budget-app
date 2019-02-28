@@ -1,7 +1,7 @@
+use chrono;
 use diesel;
 use diesel::r2d2;
 use serde_json;
-use chrono;
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -13,27 +13,27 @@ pub enum Error {
 
     NotFound,
     NotUnique,
-    
+
     DatabasePool { source: r2d2::Error },
-    Database     { source: diesel::result::Error },
-    Serialize    { source: serde_json::Error },
-    Parse        { source: chrono::ParseError },
+    Database { source: diesel::result::Error },
+    Serialize { source: serde_json::Error },
+    Parse { source: chrono::ParseError },
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Error::Msg(ref msg)           => write!(f, "Error: {}", msg)?,
-            Error::_Request(ref msg)       => write!(f, "Request Error: {}", msg)?,
+            Error::Msg(ref msg) => write!(f, "Error: {}", msg)?,
+            Error::_Request(ref msg) => write!(f, "Request Error: {}", msg)?,
 
-            Error::NotFound               => write!(f, "Not Found")?,
-            Error::NotUnique              => write!(f, "Unique Violation")?,
+            Error::NotFound => write!(f, "Not Found")?,
+            Error::NotUnique => write!(f, "Unique Violation")?,
 
-            Error::DatabasePool {..}      => write!(f, "Database Pool Error")?,
-            Error::Database {..}          => write!(f, "Database Error")?,
-            Error::Serialize {..}         => write!(f, "Serialization or deserialization error")?,
+            Error::DatabasePool { .. } => write!(f, "Database Pool Error")?,
+            Error::Database { .. } => write!(f, "Database Error")?,
+            Error::Serialize { .. } => write!(f, "Serialization or deserialization error")?,
 
-            Error::Parse {..}             => write!(f, "Parse error")?,
+            Error::Parse { .. } => write!(f, "Parse error")?,
         };
 
         match self.source() {
@@ -51,8 +51,8 @@ impl StdError for Error {
     fn cause(&self) -> Option<&StdError> {
         match *self {
             Error::DatabasePool { ref source } => Some(source),
-            Error::Database     { ref source } => Some(source),
-            Error::Serialize    { ref source } => Some(source),
+            Error::Database { ref source } => Some(source),
+            Error::Serialize { ref source } => Some(source),
             _ => None,
         }
     }
@@ -66,8 +66,8 @@ impl<'a> From<&'a str> for Error {
 
 impl From<diesel::result::Error> for Error {
     fn from(err: diesel::result::Error) -> Error {
-        use diesel::result::Error::*;
         use diesel::result::DatabaseErrorKind as EK;
+        use diesel::result::Error::*;
 
         match err {
             NotFound => Error::NotFound,
@@ -85,7 +85,7 @@ impl From<serde_json::Error> for Error {
 
 impl From<chrono::ParseError> for Error {
     fn from(err: chrono::ParseError) -> Error {
-        Error::Parse {source: err }
+        Error::Parse { source: err }
     }
 }
 

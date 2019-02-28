@@ -1,12 +1,12 @@
+use bigdecimal::BigDecimal;
+use chrono::{DateTime, NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::{self, RunQueryDsl};
 use uuid::Uuid;
-use bigdecimal::BigDecimal;
-use chrono::{DateTime, NaiveDate, Utc};
 
-use crate::schema::transactions;
-use crate::models::form_values::*;
 use crate::models::account::Account;
+use crate::models::form_values::*;
+use crate::schema::transactions;
 
 #[derive(Identifiable, Associations, Queryable, Serialize, Deserialize, Debug)]
 #[belongs_to(Account)]
@@ -21,7 +21,7 @@ pub struct Transaction {
 }
 
 #[derive(Insertable)]
-#[table_name="transactions"]
+#[table_name = "transactions"]
 pub struct NewTransaction<'a> {
     pub date: NaiveDate,
     pub account_id: Uuid,
@@ -54,7 +54,7 @@ pub fn create_transaction<'a>(conn: &PgConnection, transaction: &FormTransaction
         amount: transaction.amount.0.clone(),
         memo: match transaction.memo {
             Some(ref s) => Some(&s),
-            _ => None
+            _ => None,
         },
     };
 

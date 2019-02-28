@@ -1,9 +1,9 @@
 #![feature(plugin)]
 
+extern crate budget_app;
 extern crate dotenv;
 extern crate rocket;
 extern crate rocket_contrib;
-extern crate budget_app;
 
 use dotenv::dotenv;
 

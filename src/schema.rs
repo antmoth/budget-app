@@ -33,8 +33,4 @@ table! {
 
 joinable!(transactions -> accounts (account_id));
 
-allow_tables_to_appear_in_same_query!(
-    accounts,
-    categories,
-    transactions,
-);
+allow_tables_to_appear_in_same_query!(accounts, categories, transactions,);

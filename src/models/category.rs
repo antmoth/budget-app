@@ -1,11 +1,11 @@
-use uuid::Uuid;
 use bigdecimal::BigDecimal;
 use chrono::{DateTime, Duration, Local, NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::{self, QueryDsl, RunQueryDsl};
+use uuid::Uuid;
 
-use crate::schema::categories;
 use crate::models::form_values::*;
+use crate::schema::categories;
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Category {
@@ -20,17 +20,18 @@ pub struct Category {
 
 impl Category {
     fn _time_left(&self) -> Duration {
-        let today = NaiveDate::parse_from_str(&format!("{}", Local::today()), "%F%:z").expect("Could not parse today's date");
+        let today = NaiveDate::parse_from_str(&format!("{}", Local::today()), "%F%:z")
+            .expect("Could not parse today's date");
         let due = match self.due_date {
             Some(d) => d,
             None => today,
         };
-        return today.signed_duration_since(due)
+        return today.signed_duration_since(due);
     }
 }
 
 #[derive(Insertable)]
-#[table_name="categories"]
+#[table_name = "categories"]
 pub struct NewCategory<'a> {
     pub name: &'a str,
     pub allocation: Option<BigDecimal>,
@@ -45,7 +46,6 @@ pub struct FormCategory {
     pub goal_amount: Option<FormDecimal>,
     pub due_date: Option<FormDate>,
 }
-
 
 pub fn get_category(conn: &PgConnection, cid: Uuid) -> Category {
     categories::table

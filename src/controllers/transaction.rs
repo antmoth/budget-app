@@ -1,12 +1,12 @@
-use rocket::response::Redirect;
 use rocket::request::LenientForm;
+use rocket::response::Redirect;
 use rocket_contrib::templates::Template;
 
+use crate::context::Context;
+use crate::error::Error;
+use crate::models::transaction::{self, FormTransaction};
 use crate::MainDbConn;
 use diesel::Connection;
-use crate::models::transaction::{self, FormTransaction};
-use crate::error::Error;
-use crate::context::Context;
 
 #[get("/transactions")]
 pub fn transactions(conn: MainDbConn, mut context: Context) -> Result<Template, Error> {
@@ -21,7 +21,11 @@ pub fn new_transaction(context: Context) -> Template {
 }
 
 #[post("/new_transaction", data = "<transaction>")]
-pub fn new_transaction_post(conn: MainDbConn, _context: Context, transaction: LenientForm<FormTransaction>) -> Result<Redirect, Error> {
+pub fn new_transaction_post(
+    conn: MainDbConn,
+    _context: Context,
+    transaction: LenientForm<FormTransaction>,
+) -> Result<Redirect, Error> {
     let transaction = transaction.into_inner();
 
     conn.transaction(|| {
