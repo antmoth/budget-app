@@ -8,14 +8,12 @@ CREATE TABLE categories (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 
 	name TEXT NOT NULL,
-	allocation NUMERIC(8,2) NOT NULL DEFAULT 0,
+	allocation NUMERIC(8,2) DEFAULT 0,
   goal_amount NUMERIC(8,2) DEFAULT 0,
-  due_date DATE,
+  due_date DATE
 );
 
-CREATE TRIGGER updated_at_trigger BEFORE UPDATE
-  ON categories
-  FOR EACH ROW EXECUTE PROCEDURE diesel_manage_updated_at();
+SELECT diesel_manage_updated_at('categories');
 
 CREATE TABLE accounts (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -23,12 +21,10 @@ CREATE TABLE accounts (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-	name TEXT NOT NULL,
+	name TEXT NOT NULL
 );
 
-CREATE TRIGGER updated_at_trigger BEFORE UPDATE
-  ON accounts
-  FOR EACH ROW EXECUTE PROCEDURE diesel_manage_updated_at();
+SELECT diesel_manage_updated_at('accounts');
 
 CREATE TABLE transactions (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -38,10 +34,9 @@ CREATE TABLE transactions (
 
 	date DATE NOT NULL,
 	account_id UUID NOT NULL REFERENCES accounts,
+  category_id UUID NOT NULL REFERENCES categories,
 	amount NUMERIC(8,2) NOT NULL DEFAULT 0,
-	memo TEXT,
+	memo TEXT
 );
 
-CREATE TRIGGER updated_at_trigger BEFORE UPDATE
-  ON transactions
-  FOR EACH ROW EXECUTE PROCEDURE diesel_manage_updated_at();
+SELECT diesel_manage_updated_at('transactions');
